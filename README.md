@@ -34,3 +34,7 @@ approach to get a more modern and more modular version of the application.
 * Test driven development.
 * Compliance with SOLID.
 * Open interfaces to allow users to link own code generators, database scheme importers and update script factories.
+
+## Architecture
+
+For details look here: [architecture documentation](docs/architecture/architecture.md)
