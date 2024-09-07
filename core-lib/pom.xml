@@ -10,28 +10,17 @@
 		<version>0.0.1</version>
 	</parent>
 
-	<artifactId>syracusian-importer</artifactId>
+	<artifactId>syracusian-core-lib</artifactId>
 	<packaging>jar</packaging>
 
-	<name>Archimedes Syracusian (Importer)</name>
-	<description>The module to handle database scheme imports.</description>
+	<name>Archimedes Syracusian (Core-Lib)</name>
+	<description>The core library module of the application.</description>
 
 	<properties>
 		<plugin.prettier.goal>write</plugin.prettier.goal>
 	</properties>
 
 	<dependencies>
-		<!-- Archimedes -->
-		<dependency>
-			<groupId>de.ollie.archimedes</groupId>
-			<artifactId>syracusian-core-lib</artifactId>
-			<version>0.0.1</version>
-		</dependency>
-		<!-- Spring -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
@@ -41,11 +30,6 @@
 			<artifactId>jakarta.inject-api</artifactId>
 		</dependency>
 		<!-- Testing -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-commons</artifactId>
@@ -97,23 +81,6 @@
 					<source>${java.version}</source>
 					<target>${java.version}</target>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-						<configuration>
-							<classifier>spring-boot</classifier>
-							<mainClass>
-								de.ollie.archimedes.syracusian.importer.ArchimedesSyracusianImporterApplication
-							</mainClass>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>com.hubspot.maven.plugins</groupId>

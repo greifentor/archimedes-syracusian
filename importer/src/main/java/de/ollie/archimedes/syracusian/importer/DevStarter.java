@@ -10,5 +10,4 @@ public class DevStarter {
 	void postConstruct() {
 		System.out.println("\n\nHello!\n\n");
 	}
-
 }
