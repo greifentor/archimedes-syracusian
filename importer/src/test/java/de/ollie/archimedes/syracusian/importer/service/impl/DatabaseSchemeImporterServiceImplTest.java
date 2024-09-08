@@ -3,7 +3,7 @@ package de.ollie.archimedes.syracusian.importer.service.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import de.ollie.archimedes.syracusian.importer.model.DatabaseScheme;
+import de.ollie.archimedes.syracusian.importer.model.DatabaseSchemeMDO;
 import de.ollie.archimedes.syracusian.importer.model.JDBCConnectionData;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class DatabaseSchemeImporterServiceImplTest {
 				null
 			);
 			// Run
-			DatabaseScheme returned = unitUnderTest.readDatabaseScheme(SCHEME_NAME, connectionData);
+			DatabaseSchemeMDO returned = unitUnderTest.readDatabaseScheme(SCHEME_NAME, connectionData);
 			// Check
 			assertEquals(SCHEME_NAME, returned.getName());
 		}

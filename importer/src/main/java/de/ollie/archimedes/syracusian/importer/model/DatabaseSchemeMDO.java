@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Data
 @Generated
-public class DatabaseScheme {
+public class DatabaseSchemeMDO {
 
 	private String name;
 }

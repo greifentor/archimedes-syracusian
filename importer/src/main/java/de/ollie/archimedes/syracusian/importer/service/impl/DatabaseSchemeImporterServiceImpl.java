@@ -2,7 +2,7 @@ package de.ollie.archimedes.syracusian.importer.service.impl;
 
 import static de.ollie.archimedes.syracusian.util.Check.ensure;
 
-import de.ollie.archimedes.syracusian.importer.model.DatabaseScheme;
+import de.ollie.archimedes.syracusian.importer.model.DatabaseSchemeMDO;
 import de.ollie.archimedes.syracusian.importer.model.JDBCConnectionData;
 import de.ollie.archimedes.syracusian.importer.service.DatabaseSchemeImporterService;
 import java.sql.Connection;
@@ -11,7 +11,7 @@ import java.sql.DriverManager;
 public class DatabaseSchemeImporterServiceImpl implements DatabaseSchemeImporterService {
 
 	@Override
-	public DatabaseScheme readDatabaseScheme(String schemeName, JDBCConnectionData jdbcConnectionData) {
+	public DatabaseSchemeMDO readDatabaseScheme(String schemeName, JDBCConnectionData jdbcConnectionData) {
 		ensure(jdbcConnectionData != null, "jdbc connection data cannot be null!");
 		ensure(schemeName != null, "scheme name cannot be null!");
 		try {
@@ -20,7 +20,7 @@ public class DatabaseSchemeImporterServiceImpl implements DatabaseSchemeImporter
 				jdbcConnectionData.getDatabaseUserName(),
 				jdbcConnectionData.getDatabaseUserPassword()
 			);
-			return new DatabaseScheme(connection.getSchema());
+			return new DatabaseSchemeMDO(connection.getSchema());
 		} catch (Exception e) {
 			throw new RuntimeException();
 		}
