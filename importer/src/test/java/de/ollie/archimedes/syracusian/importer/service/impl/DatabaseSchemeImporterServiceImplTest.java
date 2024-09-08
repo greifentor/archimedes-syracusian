@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import de.ollie.archimedes.syracusian.importer.model.DatabaseSchemeMDO;
-import de.ollie.archimedes.syracusian.importer.model.JDBCConnectionData;
+import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

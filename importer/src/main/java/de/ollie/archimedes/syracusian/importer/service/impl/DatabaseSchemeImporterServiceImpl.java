@@ -3,8 +3,8 @@ package de.ollie.archimedes.syracusian.importer.service.impl;
 import static de.ollie.archimedes.syracusian.util.Check.ensure;
 
 import de.ollie.archimedes.syracusian.importer.model.DatabaseSchemeMDO;
-import de.ollie.archimedes.syracusian.importer.model.JDBCConnectionData;
 import de.ollie.archimedes.syracusian.importer.service.DatabaseSchemeImporterService;
+import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 import java.sql.Connection;
 import java.sql.DriverManager;
 

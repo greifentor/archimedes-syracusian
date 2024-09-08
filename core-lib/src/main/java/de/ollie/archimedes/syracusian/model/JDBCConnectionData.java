@@ -1,4 +1,4 @@
-package de.ollie.archimedes.syracusian.importer.model;
+package de.ollie.archimedes.syracusian.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
