@@ -6,4 +6,5 @@ public enum DatabaseType {
 	MYSQL,
 	POSTGRESQL,
 	ORACLE,
+	UNSPECIFIED,
 }

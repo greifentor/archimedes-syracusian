@@ -1,6 +1,6 @@
-package de.ollie.archimedes.syracusian.importer.service;
+package de.ollie.archimedes.syracusian.importer.core.service;
 
-import de.ollie.archimedes.syracusian.importer.model.DatabaseSchemeMDO;
+import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 
 public interface DatabaseSchemeImporterService {

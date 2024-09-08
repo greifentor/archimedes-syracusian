@@ -1,9 +1,9 @@
-package de.ollie.archimedes.syracusian.importer.service.impl;
+package de.ollie.archimedes.syracusian.importer.core.service.impl;
 
 import static de.ollie.archimedes.syracusian.util.Check.ensure;
 
-import de.ollie.archimedes.syracusian.importer.model.DatabaseSchemeMDO;
-import de.ollie.archimedes.syracusian.importer.service.DatabaseSchemeImporterService;
+import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
+import de.ollie.archimedes.syracusian.importer.core.service.DatabaseSchemeImporterService;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 import java.sql.Connection;
 import java.sql.DriverManager;

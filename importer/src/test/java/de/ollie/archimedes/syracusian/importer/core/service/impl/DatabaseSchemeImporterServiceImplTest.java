@@ -1,9 +1,10 @@
-package de.ollie.archimedes.syracusian.importer.service.impl;
+package de.ollie.archimedes.syracusian.importer.core.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import de.ollie.archimedes.syracusian.importer.model.DatabaseSchemeMDO;
+import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
+import de.ollie.archimedes.syracusian.importer.core.service.impl.DatabaseSchemeImporterServiceImpl;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
