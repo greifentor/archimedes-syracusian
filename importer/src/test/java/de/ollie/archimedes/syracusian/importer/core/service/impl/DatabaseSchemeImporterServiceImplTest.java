@@ -2,10 +2,14 @@ package de.ollie.archimedes.syracusian.importer.core.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
+import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException;
 import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
-import de.ollie.archimedes.syracusian.importer.core.service.impl.DatabaseSchemeImporterServiceImpl;
+import de.ollie.archimedes.syracusian.importer.core.service.DatabaseConnectionFactory;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
+import java.sql.Connection;
+import java.sql.SQLException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +21,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class DatabaseSchemeImporterServiceImplTest {
 
 	private static final String SCHEME_NAME = "PUBLIC";
+
+	@Mock
+	private Connection connection;
+
+	@Mock
+	private DatabaseConnectionFactory databaseConnectionFactory;
 
 	@Mock
 	private JDBCConnectionData connectionData;
@@ -38,14 +48,16 @@ class DatabaseSchemeImporterServiceImplTest {
 		}
 
 		@Test
-		void returnsDataschemeObject_withCorrectNameSet() {
+		void throwsAnException_whenSomethingWentWrongDuringDatabaseAccess() throws Exception {
+			when(databaseConnectionFactory.create(connectionData)).thenThrow(new SQLException());
+			assertThrows(ImportFailureException.class, () -> unitUnderTest.readDatabaseScheme(SCHEME_NAME, connectionData));
+		}
+
+		@Test
+		void returnsDataschemeObject_withCorrectNameSet() throws Exception {
 			// Prepare
-			JDBCConnectionData connectionData = new JDBCConnectionData(
-				"org.hsqldb.jdbc.JDBCDriver",
-				"jdbc:hsqldb:file:src/test/resources/test-db/test-db",
-				"sa",
-				null
-			);
+			when(connection.getSchema()).thenReturn(SCHEME_NAME);
+			when(databaseConnectionFactory.create(connectionData)).thenReturn(connection);
 			// Run
 			DatabaseSchemeMDO returned = unitUnderTest.readDatabaseScheme(SCHEME_NAME, connectionData);
 			// Check

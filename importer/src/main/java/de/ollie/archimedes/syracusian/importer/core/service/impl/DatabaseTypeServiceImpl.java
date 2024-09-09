@@ -6,9 +6,11 @@ import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureExcep
 import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException.ReasonType;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseTypeService;
 import de.ollie.archimedes.syracusian.model.DatabaseType;
+import jakarta.inject.Named;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+@Named
 public class DatabaseTypeServiceImpl implements DatabaseTypeService {
 
 	@Override
