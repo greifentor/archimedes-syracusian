@@ -2,6 +2,7 @@ package de.ollie.archimedes.syracusian.importer.core.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseSchemeImporterService;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 import jakarta.inject.Inject;
@@ -16,21 +17,25 @@ class DatabaseSchemeImporterServiceImplITest {
 	@Inject
 	private DatabaseSchemeImporterService unitUnderTest;
 
-	@Test
-	void happyRun() {
-		assertEquals(
+	private DatabaseSchemeMDO readDatabaseSchemeMDO() {
+		return unitUnderTest.readDatabaseScheme(
 			"PUBLIC",
-			unitUnderTest
-				.readDatabaseScheme(
-					"PUBLIC",
-					new JDBCConnectionData(
-						"org.hsqldb.jdbc.JDBCDriver",
-						"jdbc:hsqldb:file:src/test/resources/test-db/test-db",
-						"sa",
-						null
-					)
-				)
-				.getName()
+			new JDBCConnectionData(
+				"org.hsqldb.jdbc.JDBCDriver",
+				"jdbc:hsqldb:file:src/test/resources/test-db/test-db",
+				"sa",
+				null
+			)
 		);
 	}
+
+	@Test
+	void happyRun_schemeName() {
+		assertEquals("PUBLIC", readDatabaseSchemeMDO().getName());
+	}
+	//	@Test
+	//	void happyRun_tableNames() {
+	//		Set<String> expected = Set.of("BOOK, RACK");
+	//		assertEquals(expected, readDatabaseSchemeMDO().getTableNames());
+	//	}
 }

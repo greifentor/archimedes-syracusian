@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 
 @Named
@@ -42,6 +43,6 @@ public class DatabaseSchemeReaderServiceImpl implements DatabaseSchemeReaderServ
 			databaseTypeService.getDatabaseType(connection),
 			defaultAccessor
 		);
-		return new DatabaseSchemeMDO(accessor.getName(connection));
+		return new DatabaseSchemeMDO(accessor.getName(connection), Set.of());
 	}
 }

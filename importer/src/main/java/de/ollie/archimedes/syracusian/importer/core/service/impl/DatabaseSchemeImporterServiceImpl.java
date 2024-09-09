@@ -7,6 +7,7 @@ import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureExcep
 import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseConnectionFactory;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseSchemeImporterService;
+import de.ollie.archimedes.syracusian.importer.core.service.reader.DatabaseSchemeReaderService;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 import jakarta.inject.Named;
 import java.sql.Connection;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class DatabaseSchemeImporterServiceImpl implements DatabaseSchemeImporterService {
 
 	private final DatabaseConnectionFactory databaseConnectionFactory;
+	private final DatabaseSchemeReaderService databaseSchemeReaderService;
 
 	@Override
 	public DatabaseSchemeMDO readDatabaseScheme(String schemeName, JDBCConnectionData jdbcConnectionData) {
@@ -24,7 +26,7 @@ public class DatabaseSchemeImporterServiceImpl implements DatabaseSchemeImporter
 		ensure(schemeName != null, "scheme name cannot be null!");
 		try {
 			Connection connection = databaseConnectionFactory.create(jdbcConnectionData);
-			return new DatabaseSchemeMDO(connection.getSchema());
+			return databaseSchemeReaderService.read(connection);
 		} catch (Exception e) {
 			throw new ImportFailureException(
 				"failure during database access: " + e.getMessage(),

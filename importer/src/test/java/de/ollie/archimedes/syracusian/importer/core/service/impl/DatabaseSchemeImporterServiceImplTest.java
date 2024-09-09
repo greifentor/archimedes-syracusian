@@ -7,9 +7,11 @@ import static org.mockito.Mockito.when;
 import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException;
 import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseConnectionFactory;
+import de.ollie.archimedes.syracusian.importer.core.service.reader.DatabaseSchemeReaderService;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Set;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +29,9 @@ class DatabaseSchemeImporterServiceImplTest {
 
 	@Mock
 	private DatabaseConnectionFactory databaseConnectionFactory;
+
+	@Mock
+	private DatabaseSchemeReaderService databaseSchemeReaderService;
 
 	@Mock
 	private JDBCConnectionData connectionData;
@@ -56,8 +61,8 @@ class DatabaseSchemeImporterServiceImplTest {
 		@Test
 		void returnsDataschemeObject_withCorrectNameSet() throws Exception {
 			// Prepare
-			when(connection.getSchema()).thenReturn(SCHEME_NAME);
 			when(databaseConnectionFactory.create(connectionData)).thenReturn(connection);
+			when(databaseSchemeReaderService.read(connection)).thenReturn(new DatabaseSchemeMDO(SCHEME_NAME, Set.of()));
 			// Run
 			DatabaseSchemeMDO returned = unitUnderTest.readDatabaseScheme(SCHEME_NAME, connectionData);
 			// Check
