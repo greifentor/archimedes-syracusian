@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Named
 @RequiredArgsConstructor
-public class DatabaseSchemeImporterServiceImpl implements DatabaseSchemeImporterService {
+class DatabaseSchemeImporterServiceImpl implements DatabaseSchemeImporterService {
 
 	private final DatabaseConnectionFactory databaseConnectionFactory;
 	private final DatabaseSchemeReaderService databaseSchemeReaderService;

@@ -35,7 +35,7 @@ class DatabaseSchemeImporterServiceImplITest {
 	}
 	//	@Test
 	//	void happyRun_tableNames() {
-	//		Set<String> expected = Set.of("BOOK, RACK");
+	//		List<String> expected = List.of("BOOK, RACK");
 	//		assertEquals(expected, readDatabaseSchemeMDO().getTableNames());
 	//	}
 }

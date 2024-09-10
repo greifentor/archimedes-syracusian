@@ -8,7 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @Named
-public class DatabaseConnectionFactoryImpl implements DatabaseConnectionFactory {
+class DatabaseConnectionFactoryImpl implements DatabaseConnectionFactory {
 
 	@Override
 	public Connection create(JDBCConnectionData jdbcConnectionData) throws SQLException {

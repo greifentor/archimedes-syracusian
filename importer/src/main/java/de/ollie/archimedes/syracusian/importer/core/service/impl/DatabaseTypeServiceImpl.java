@@ -11,7 +11,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @Named
-public class DatabaseTypeServiceImpl implements DatabaseTypeService {
+class DatabaseTypeServiceImpl implements DatabaseTypeService {
 
 	@Override
 	public DatabaseType getDatabaseType(Connection connection) {

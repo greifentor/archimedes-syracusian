@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @Named
 @RequiredArgsConstructor
-public class DatabaseSchemeReaderServiceImpl implements DatabaseSchemeReaderService {
+class DatabaseSchemeReaderServiceImpl implements DatabaseSchemeReaderService {
 
 	private final DatabaseTypeService databaseTypeService;
 	private final List<DatabaseSchemeAccessor> databaseSchemeAccessors;
