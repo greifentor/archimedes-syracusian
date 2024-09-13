@@ -15,6 +15,7 @@ public class ImportFailureException extends RuntimeException {
 		CONNECTION_READ_ERROR,
 		DATABASE_TYPE_READ_ERROR,
 		SCHEME_NAME_READ_ERROR,
+		TABLE_DATA_READ_ERROR,
 	}
 
 	@AllArgsConstructor

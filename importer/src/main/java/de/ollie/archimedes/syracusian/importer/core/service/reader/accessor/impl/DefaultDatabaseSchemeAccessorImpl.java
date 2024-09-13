@@ -3,6 +3,7 @@ package de.ollie.archimedes.syracusian.importer.core.service.reader.accessor.imp
 import static de.ollie.archimedes.syracusian.util.Check.ensure;
 
 import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException;
+import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException.MessageParameter;
 import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException.ReasonType;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.accessor.DatabaseSchemeAccessor;
 import de.ollie.archimedes.syracusian.model.DatabaseType;
@@ -24,7 +25,12 @@ public class DefaultDatabaseSchemeAccessorImpl implements DatabaseSchemeAccessor
 		try {
 			return connection.getSchema();
 		} catch (SQLException e) {
-			throw new ImportFailureException("reading schema from connection failed", ReasonType.SCHEME_NAME_READ_ERROR, e);
+			throw new ImportFailureException(
+				"reading schema from connection failed",
+				ReasonType.SCHEME_NAME_READ_ERROR,
+				e,
+				new MessageParameter("scheme", "schemeName")
+			);
 		}
 	}
 }

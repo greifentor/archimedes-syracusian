@@ -6,6 +6,7 @@ import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseSchemeImporterService;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 import jakarta.inject.Inject;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -33,9 +34,10 @@ class DatabaseSchemeImporterServiceImplITest {
 	void happyRun_schemeName() {
 		assertEquals("PUBLIC", readDatabaseSchemeMDO().getName());
 	}
-	//	@Test
-	//	void happyRun_tableNames() {
-	//		List<String> expected = List.of("BOOK, RACK");
-	//		assertEquals(expected, readDatabaseSchemeMDO().getTableNames());
-	//	}
+
+	@Test
+	void happyRun_tableNames() {
+		List<String> expected = List.of("BOOK", "RACK");
+		assertEquals(expected, readDatabaseSchemeMDO().getTableNames());
+	}
 }

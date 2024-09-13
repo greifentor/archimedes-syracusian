@@ -6,8 +6,10 @@ import static org.mockito.Mockito.when;
 
 import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException;
 import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
+import de.ollie.archimedes.syracusian.importer.core.model.TableMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseConnectionFactory;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.DatabaseSchemeReaderService;
+import de.ollie.archimedes.syracusian.importer.core.service.reader.TableReaderService;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -32,6 +34,15 @@ class DatabaseSchemeImporterServiceImplTest {
 
 	@Mock
 	private DatabaseSchemeReaderService databaseSchemeReaderService;
+
+	@Mock
+	private TableMDO tableA;
+
+	@Mock
+	private TableMDO tableB;
+
+	@Mock
+	private TableReaderService tableReaderService;
 
 	@Mock
 	private JDBCConnectionData connectionData;
@@ -67,6 +78,18 @@ class DatabaseSchemeImporterServiceImplTest {
 			DatabaseSchemeMDO returned = unitUnderTest.readDatabaseScheme(SCHEME_NAME, connectionData);
 			// Check
 			assertEquals(SCHEME_NAME, returned.getName());
+		}
+
+		@Test
+		void returnsDataschemeObject_withTablesSet() throws Exception {
+			// Prepare
+			when(databaseConnectionFactory.create(connectionData)).thenReturn(connection);
+			when(databaseSchemeReaderService.read(connection)).thenReturn(new DatabaseSchemeMDO(SCHEME_NAME, Set.of()));
+			when(tableReaderService.read(SCHEME_NAME, connection)).thenReturn(Set.of(tableB, tableA));
+			// Run
+			DatabaseSchemeMDO returned = unitUnderTest.readDatabaseScheme(SCHEME_NAME, connectionData);
+			// Check
+			assertEquals(Set.of(tableA, tableB), returned.getTables());
 		}
 	}
 }
