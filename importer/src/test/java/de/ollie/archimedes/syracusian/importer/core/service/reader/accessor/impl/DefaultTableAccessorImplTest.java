@@ -48,7 +48,7 @@ class DefaultTableAccessorImplTest {
 		}
 
 		@Test
-		void returnsAnEmptySet_ifMetaDatDoesNotContainAnyTables() throws Exception {
+		void returnsAnEmptySet_ifMetaDataDoesNotContainAnyTables() throws Exception {
 			// Prepare
 			when(connection.getMetaData()).thenReturn(metaData);
 			when(metaData.getTables(null, SCHEME_NAME, "%", new String[] { "TABLE" })).thenReturn(resultSet);
@@ -60,7 +60,7 @@ class DefaultTableAccessorImplTest {
 		}
 
 		@Test
-		void returnsASetWithTables_ifMetaDatContainsTables() throws Exception {
+		void returnsASetWithTables_ifMetaDataContainsTables() throws Exception {
 			// Prepare
 			Set<TableMDO> expected = Set.of(new TableMDO().setName(TABLE_NAME));
 			when(connection.getMetaData()).thenReturn(metaData);

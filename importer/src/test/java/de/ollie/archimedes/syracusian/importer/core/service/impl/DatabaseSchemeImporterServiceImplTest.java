@@ -2,12 +2,16 @@ package de.ollie.archimedes.syracusian.importer.core.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException;
+import de.ollie.archimedes.syracusian.importer.core.model.ColumnMDO;
 import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
 import de.ollie.archimedes.syracusian.importer.core.model.TableMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseConnectionFactory;
+import de.ollie.archimedes.syracusian.importer.core.service.reader.ColumnReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.DatabaseSchemeReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.TableReaderService;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
@@ -25,6 +29,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class DatabaseSchemeImporterServiceImplTest {
 
 	private static final String SCHEME_NAME = "PUBLIC";
+	private static final String TABLE_NAME_A = "TABLE_A";
+	private static final String TABLE_NAME_B = "TABLE_B";
+
+	@Mock
+	private ColumnMDO columnA;
+
+	@Mock
+	private ColumnMDO columnB;
+
+	@Mock
+	private ColumnReaderService columnReaderService;
 
 	@Mock
 	private Connection connection;
@@ -90,6 +105,23 @@ class DatabaseSchemeImporterServiceImplTest {
 			DatabaseSchemeMDO returned = unitUnderTest.readDatabaseScheme(SCHEME_NAME, connectionData);
 			// Check
 			assertEquals(Set.of(tableA, tableB), returned.getTables());
+		}
+
+		@Test
+		void returnsDataschemeObject_withColumnOfTablesSet() throws Exception {
+			// Prepare
+			when(databaseConnectionFactory.create(connectionData)).thenReturn(connection);
+			when(databaseSchemeReaderService.read(connection)).thenReturn(new DatabaseSchemeMDO(SCHEME_NAME, Set.of()));
+			when(tableReaderService.read(SCHEME_NAME, connection)).thenReturn(Set.of(tableB, tableA));
+			when(tableA.getName()).thenReturn(TABLE_NAME_A);
+			when(tableB.getName()).thenReturn(TABLE_NAME_B);
+			when(columnReaderService.read(SCHEME_NAME, TABLE_NAME_A, connection)).thenReturn(Set.of(columnA));
+			when(columnReaderService.read(SCHEME_NAME, TABLE_NAME_B, connection)).thenReturn(Set.of(columnB));
+			// Run
+			unitUnderTest.readDatabaseScheme(SCHEME_NAME, connectionData);
+			// Check
+			verify(tableA, times(1)).setColumns(Set.of(columnA));
+			verify(tableB, times(1)).setColumns(Set.of(columnB));
 		}
 	}
 }

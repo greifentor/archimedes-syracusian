@@ -7,6 +7,7 @@ import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureExcep
 import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseConnectionFactory;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseSchemeImporterService;
+import de.ollie.archimedes.syracusian.importer.core.service.reader.ColumnReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.DatabaseSchemeReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.TableReaderService;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 class DatabaseSchemeImporterServiceImpl implements DatabaseSchemeImporterService {
 
+	private final ColumnReaderService columnReaderService;
 	private final DatabaseConnectionFactory databaseConnectionFactory;
 	private final DatabaseSchemeReaderService databaseSchemeReaderService;
 	private final TableReaderService tableReaderService;
@@ -31,6 +33,9 @@ class DatabaseSchemeImporterServiceImpl implements DatabaseSchemeImporterService
 			Connection connection = databaseConnectionFactory.create(jdbcConnectionData);
 			DatabaseSchemeMDO scheme = databaseSchemeReaderService.read(connection);
 			scheme.setTables(tableReaderService.read(schemeName, connection));
+			scheme
+				.getTables()
+				.forEach(table -> table.setColumns(columnReaderService.read(scheme.getName(), table.getName(), connection)));
 			return scheme;
 		} catch (SQLException e) {
 			throw new ImportFailureException(

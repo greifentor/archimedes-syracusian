@@ -12,6 +12,7 @@ import lombok.Getter;
 public class ImportFailureException extends RuntimeException {
 
 	public enum ReasonType {
+		COLUMN_DATA_READ_ERROR,
 		CONNECTION_READ_ERROR,
 		DATABASE_TYPE_READ_ERROR,
 		SCHEME_NAME_READ_ERROR,

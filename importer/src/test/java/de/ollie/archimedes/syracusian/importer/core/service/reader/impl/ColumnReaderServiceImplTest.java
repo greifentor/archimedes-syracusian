@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import de.ollie.archimedes.syracusian.importer.core.model.TableMDO;
+import de.ollie.archimedes.syracusian.importer.core.model.ColumnMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseTypeService;
-import de.ollie.archimedes.syracusian.importer.core.service.reader.accessor.TableAccessor;
+import de.ollie.archimedes.syracusian.importer.core.service.reader.accessor.ColumnAccessor;
 import de.ollie.archimedes.syracusian.model.DatabaseType;
 import java.sql.Connection;
 import java.util.List;
@@ -20,30 +20,31 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class TableReaderServiceImplTest {
+class ColumnReaderServiceImplTest {
 
 	private static final String SCHEME_NAME = "scheme-name";
+	private static final String TABLE_NAME = "table-name";
 
 	@Mock
-	private TableMDO table;
+	private ColumnMDO column;
 
 	@Mock
-	private TableAccessor accessor0;
+	private ColumnAccessor accessor0;
 
 	@Mock
-	private TableAccessor accessor1;
+	private ColumnAccessor accessor1;
+
+	@Mock
+	private Connection connection;
 
 	@Mock
 	private DatabaseTypeService databaseTypeService;
 
 	@Mock
-	private List<TableAccessor> accessors;
-
-	@Mock
-	private Connection connection;
+	private List<ColumnAccessor> accessors;
 
 	@InjectMocks
-	private TableReaderServiceImpl unitUnderTest;
+	private ColumnReaderServiceImpl unitUnderTest;
 
 	@Nested
 	class TestsOfMethod_postConstruct {
@@ -64,40 +65,45 @@ class TableReaderServiceImplTest {
 	}
 
 	@Nested
-	class TestsOfMethod_read_String_Connection {
+	class TestsOfMethod_read_String_String_Connection {
 
 		@Test
-		void throwsAnException_passingANullValueAsConnection() {
-			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.read(SCHEME_NAME, null));
+		void throwsAnException_passingConnectionAsNullValue() {
+			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.read(SCHEME_NAME, TABLE_NAME, null));
 		}
 
 		@Test
-		void returnsCorrectTableSet_whenAnAccessorIsDefinedForDatabaseTypeUNSPECIFIEDOnly() {
+		void throwsAnException_passingTableNameAsNullValue() {
+			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.read(SCHEME_NAME, null, connection));
+		}
+
+		@Test
+		void returnsA_whenAnAccessorIsDefinedForDatabaseTypeUNSPECIFIEDOnly() {
 			// Prepare
-			Set<TableMDO> expected = Set.of(table);
+			Set<ColumnMDO> expected = Set.of(column);
 			when(accessor0.getDatabaseType()).thenReturn(DatabaseType.UNSPECIFIED);
-			when(accessor0.getTables(SCHEME_NAME, connection)).thenReturn(expected);
+			when(accessor0.getColumns(SCHEME_NAME, TABLE_NAME, connection)).thenReturn(expected);
 			when(accessors.stream()).thenReturn(Stream.of(accessor0));
 			when(databaseTypeService.getDatabaseType(connection)).thenReturn(DatabaseType.HSQL);
 			unitUnderTest.postConstruct();
 			// Run
-			Set<TableMDO> returned = unitUnderTest.read(SCHEME_NAME, connection);
+			Set<ColumnMDO> returned = unitUnderTest.read(SCHEME_NAME, TABLE_NAME, connection);
 			// Check
 			assertEquals(expected, returned);
 		}
 
 		@Test
-		void returnsCorrectTableSet_whenAnAccessorIsDefinedForSpecifiedDatabaseType() {
+		void throwsAnException_whenAnAccessorIsDefinedForSpecifiedDatabaseType() {
 			// Prepare
-			Set<TableMDO> expected = Set.of(table);
+			Set<ColumnMDO> expected = Set.of(column);
 			when(accessor0.getDatabaseType()).thenReturn(DatabaseType.UNSPECIFIED);
 			when(accessor1.getDatabaseType()).thenReturn(DatabaseType.HSQL);
-			when(accessor1.getTables(SCHEME_NAME, connection)).thenReturn(expected);
+			when(accessor1.getColumns(SCHEME_NAME, TABLE_NAME, connection)).thenReturn(expected);
 			when(accessors.stream()).thenReturn(Stream.of(accessor0, accessor1));
 			when(databaseTypeService.getDatabaseType(connection)).thenReturn(DatabaseType.HSQL);
 			unitUnderTest.postConstruct();
 			// Run
-			Set<TableMDO> returned = unitUnderTest.read(SCHEME_NAME, connection);
+			Set<ColumnMDO> returned = unitUnderTest.read(SCHEME_NAME, TABLE_NAME, connection);
 			// Check
 			assertEquals(expected, returned);
 		}

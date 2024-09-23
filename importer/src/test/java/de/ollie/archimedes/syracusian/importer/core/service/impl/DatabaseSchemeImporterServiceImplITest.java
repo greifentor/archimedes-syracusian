@@ -40,4 +40,10 @@ class DatabaseSchemeImporterServiceImplITest {
 		List<String> expected = List.of("BOOK", "RACK");
 		assertEquals(expected, readDatabaseSchemeMDO().getTableNames());
 	}
+
+	@Test
+	void happyRun_columnNames() {
+		// TODO OLI: Create a infrastructure and test for accessing columns in the
+		// model.
+	}
 }

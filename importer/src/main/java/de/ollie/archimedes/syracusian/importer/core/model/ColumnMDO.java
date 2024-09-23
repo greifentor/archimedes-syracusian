@@ -1,7 +1,5 @@
 package de.ollie.archimedes.syracusian.importer.core.model;
 
-import java.util.HashSet;
-import java.util.Set;
 import lombok.Data;
 import lombok.Generated;
 import lombok.NoArgsConstructor;
@@ -11,8 +9,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Data
 @Generated
-public class TableMDO {
+public class ColumnMDO {
 
 	private String name;
-	private Set<ColumnMDO> columns = new HashSet<>();
 }

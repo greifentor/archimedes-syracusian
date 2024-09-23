@@ -5,8 +5,8 @@ import static de.ollie.archimedes.syracusian.util.Check.ensure;
 import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException;
 import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException.MessageParameter;
 import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException.ReasonType;
-import de.ollie.archimedes.syracusian.importer.core.model.TableMDO;
-import de.ollie.archimedes.syracusian.importer.core.service.reader.accessor.TableAccessor;
+import de.ollie.archimedes.syracusian.importer.core.model.ColumnMDO;
+import de.ollie.archimedes.syracusian.importer.core.service.reader.accessor.ColumnAccessor;
 import de.ollie.archimedes.syracusian.model.DatabaseType;
 import jakarta.inject.Named;
 import java.sql.Connection;
@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Named
-class DefaultTableAccessorImpl implements TableAccessor {
+public class DefaultColumnAccessorImpl implements ColumnAccessor {
 
 	@Override
 	public DatabaseType getDatabaseType() {
@@ -24,23 +24,25 @@ class DefaultTableAccessorImpl implements TableAccessor {
 	}
 
 	@Override
-	public Set<TableMDO> getTables(String schemeName, Connection connection) {
+	public Set<ColumnMDO> getColumns(String schemeName, String tableName, Connection connection) {
 		ensure(connection != null, "connection cannot be null!");
 		ensure(schemeName != null, "scheme name cannot be null!");
+		ensure(tableName != null, "table name cannot be null!");
 		try {
-			Set<TableMDO> tables = new HashSet<>();
-			ResultSet rs = connection.getMetaData().getTables(null, schemeName, "%", new String[] { "TABLE" });
+			Set<ColumnMDO> columns = new HashSet<>();
+			ResultSet rs = connection.getMetaData().getColumns(null, schemeName, tableName, "%");
 			while (rs.next()) {
-				TableMDO t = new TableMDO().setName(rs.getString("TABLE_NAME"));
-				tables.add(t);
+				ColumnMDO c = new ColumnMDO().setName(rs.getString("COLUMN_NAME"));
+				columns.add(c);
 			}
-			return tables;
+			return columns;
 		} catch (SQLException e) {
 			throw new ImportFailureException(
-				"reading schema from connection failed",
-				ReasonType.TABLE_DATA_READ_ERROR,
+				"reading column from connection failed",
+				ReasonType.COLUMN_DATA_READ_ERROR,
 				e,
-				new MessageParameter("scheme", schemeName)
+				new MessageParameter("scheme", schemeName),
+				new MessageParameter("table", tableName)
 			);
 		}
 	}
