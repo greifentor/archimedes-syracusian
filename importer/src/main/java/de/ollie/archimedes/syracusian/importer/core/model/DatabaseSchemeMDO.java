@@ -1,6 +1,9 @@
 package de.ollie.archimedes.syracusian.importer.core.model;
 
+import static de.ollie.archimedes.syracusian.util.Check.ensure;
+
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,5 +21,10 @@ public class DatabaseSchemeMDO {
 
 	public List<String> getTableNames() {
 		return tables.stream().map(t -> t.getName()).sorted().toList();
+	}
+
+	public Optional<TableMDO> findTableByName(String tableName) {
+		ensure(tableName != null, "table name cannot be null!");
+		return tables.stream().filter(table -> tableName.equals(table.getName())).findFirst();
 	}
 }

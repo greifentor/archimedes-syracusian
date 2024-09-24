@@ -42,8 +42,14 @@ class DatabaseSchemeImporterServiceImplITest {
 	}
 
 	@Test
-	void happyRun_columnNames() {
-		// TODO OLI: Create a infrastructure and test for accessing columns in the
-		// model.
+	void happyRun_columnNames_forTableBOOK() {
+		List<String> expected = List.of("ID", "RACK", "SIGNATURE", "TITLE");
+		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("BOOK").get().getColumnNames());
+	}
+
+	@Test
+	void happyRun_columnNames_forTableRACK() {
+		List<String> expected = List.of("ID", "TOKEN");
+		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("RACK").get().getColumnNames());
 	}
 }

@@ -1,6 +1,7 @@
 package de.ollie.archimedes.syracusian.importer.core.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -43,6 +44,33 @@ class DatabaseSchemeMDOTest {
 			List<String> returned = unitUnderTest.getTableNames();
 			// Check
 			assertEquals(List.of(TABLE_NAME_0, TABLE_NAME_1, TABLE_NAME_2), unitUnderTest.getTableNames());
+		}
+	}
+
+	@Nested
+	class TestsOfMethod_findTableByName {
+
+		@Test
+		void throwsAnException_passingANullValueAsTableName() {
+			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.findTableByName(null));
+		}
+
+		@Test
+		void returnsAEmptyOptional_passingANameOfAnUnexistingTable() {
+			// Prepare
+			Set<TableMDO> s = Set.of(new TableMDO().setName(TABLE_NAME_0));
+			unitUnderTest.setTables(s);
+			// Run & Check
+			assertTrue(unitUnderTest.findTableByName(TABLE_NAME_0 + 1).isEmpty());
+		}
+
+		@Test
+		void returnsAnOptionalWithTheMatchingTableMDO_passingANameOfAnExistingTable() {
+			// Prepare
+			Set<TableMDO> s = Set.of(new TableMDO().setName(TABLE_NAME_0));
+			unitUnderTest.setTables(s);
+			// Run & Check
+			assertEquals(TABLE_NAME_0, unitUnderTest.findTableByName(TABLE_NAME_0).get().getName());
 		}
 	}
 }
