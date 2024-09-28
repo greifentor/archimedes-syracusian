@@ -44,4 +44,28 @@ class TableMDOTest {
 			assertEquals(List.of(COLUMN_NAME_0, COLUMN_NAME_1, COLUMN_NAME_2), returned);
 		}
 	}
+
+	@Nested
+	class TestsOfMethod_getNotNullColumnNames {
+
+		@Test
+		void returnsAnEmptyList_whenTableHasNoColumns() {
+			assertTrue(unitUnderTest.getColumnNames().isEmpty());
+		}
+
+		@Test
+		void returnsASortedListWithTheColumnNames_whenTableColumns() {
+			// Prepare
+			Set<ColumnMDO> columns = Set.of(
+				new ColumnMDO().setName(COLUMN_NAME_0).setNullable(true),
+				new ColumnMDO().setName(COLUMN_NAME_2).setNullable(false),
+				new ColumnMDO().setName(COLUMN_NAME_1).setNullable(false)
+			);
+			unitUnderTest.setColumns(columns);
+			// Run
+			List<String> returned = unitUnderTest.getNotNullColumnNames();
+			// Check
+			assertEquals(List.of(COLUMN_NAME_1, COLUMN_NAME_2), returned);
+		}
+	}
 }

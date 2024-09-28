@@ -52,4 +52,16 @@ class DatabaseSchemeImporterServiceImplITest {
 		List<String> expected = List.of("ID", "TOKEN");
 		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("RACK").get().getColumnNames());
 	}
+
+	@Test
+	void happyRun_notNullColumnNames_forTableBOOK() {
+		List<String> expected = List.of("ID", "SIGNATURE", "TITLE");
+		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("BOOK").get().getNotNullColumnNames());
+	}
+
+	@Test
+	void happyRun_notNullColumnNames_forTableRACK() {
+		List<String> expected = List.of("ID", "TOKEN");
+		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("RACK").get().getNotNullColumnNames());
+	}
 }

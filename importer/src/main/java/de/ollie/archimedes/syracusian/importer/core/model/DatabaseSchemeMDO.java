@@ -19,12 +19,12 @@ public class DatabaseSchemeMDO {
 	private String name;
 	private Set<TableMDO> tables = Set.of();
 
-	public List<String> getTableNames() {
-		return tables.stream().map(t -> t.getName()).sorted().toList();
-	}
-
 	public Optional<TableMDO> findTableByName(String tableName) {
 		ensure(tableName != null, "table name cannot be null!");
 		return tables.stream().filter(table -> tableName.equals(table.getName())).findFirst();
+	}
+
+	public List<String> getTableNames() {
+		return tables.stream().map(t -> t.getName()).sorted().toList();
 	}
 }

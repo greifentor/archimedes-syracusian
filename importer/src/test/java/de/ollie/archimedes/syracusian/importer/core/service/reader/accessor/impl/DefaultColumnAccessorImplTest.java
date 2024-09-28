@@ -84,5 +84,26 @@ class DefaultColumnAccessorImplTest {
 			// Check
 			assertEquals(Set.of(new ColumnMDO().setName(COLUMN_NAME_A), new ColumnMDO().setName(COLUMN_NAME_B)), returned);
 		}
+
+		@Test
+		void returnsASetWithTheCorrectColumns_withNotNullColumns_passingValidConnectionSchemeNameAndTableName()
+			throws Exception {
+			// Prepare
+			when(connection.getMetaData()).thenReturn(databaseMetaData);
+			when(databaseMetaData.getColumns(null, SCHEME_NAME, TABLE_NAME, "%")).thenReturn(resultSet);
+			when(resultSet.getString("COLUMN_NAME")).thenReturn(COLUMN_NAME_A, COLUMN_NAME_B);
+			when(resultSet.getBoolean("NULLABLE")).thenReturn(true, false);
+			when(resultSet.next()).thenReturn(true, true, false);
+			// Run
+			Set<ColumnMDO> returned = unitUnderTest.getColumns(SCHEME_NAME, TABLE_NAME, connection);
+			// Check
+			assertEquals(
+				Set.of(
+					new ColumnMDO().setName(COLUMN_NAME_A).setNullable(true),
+					new ColumnMDO().setName(COLUMN_NAME_B).setNullable(false)
+				),
+				returned
+			);
+		}
 	}
 }

@@ -12,4 +12,5 @@ import lombok.experimental.Accessors;
 public class ColumnMDO {
 
 	private String name;
+	private boolean nullable;
 }

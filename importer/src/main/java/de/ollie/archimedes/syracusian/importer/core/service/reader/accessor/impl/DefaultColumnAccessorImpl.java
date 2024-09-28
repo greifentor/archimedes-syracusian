@@ -32,7 +32,7 @@ public class DefaultColumnAccessorImpl implements ColumnAccessor {
 			Set<ColumnMDO> columns = new HashSet<>();
 			ResultSet rs = connection.getMetaData().getColumns(null, schemeName, tableName, "%");
 			while (rs.next()) {
-				ColumnMDO c = new ColumnMDO().setName(rs.getString("COLUMN_NAME"));
+				ColumnMDO c = new ColumnMDO().setName(rs.getString("COLUMN_NAME")).setNullable(rs.getBoolean("NULLABLE"));
 				columns.add(c);
 			}
 			return columns;
