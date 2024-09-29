@@ -2,6 +2,7 @@ package de.ollie.archimedes.syracusian.importer.core.model;
 
 import static de.ollie.archimedes.syracusian.util.Check.ensure;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -17,7 +18,7 @@ import lombok.experimental.Accessors;
 public class DatabaseSchemeMDO {
 
 	private String name;
-	private Set<TableMDO> tables = Set.of();
+	private Set<TableMDO> tables = new HashSet<>();
 
 	public Optional<TableMDO> findTableByName(String tableName) {
 		ensure(tableName != null, "table name cannot be null!");

@@ -73,6 +73,11 @@ class ColumnReaderServiceImplTest {
 		}
 
 		@Test
+		void throwsAnException_passingSchemeNameAsNullValue() {
+			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.read(null, TABLE_NAME, connection));
+		}
+
+		@Test
 		void throwsAnException_passingTableNameAsNullValue() {
 			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.read(SCHEME_NAME, null, connection));
 		}
