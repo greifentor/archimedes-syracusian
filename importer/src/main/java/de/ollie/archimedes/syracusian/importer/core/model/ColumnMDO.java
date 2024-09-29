@@ -13,4 +13,5 @@ public class ColumnMDO {
 
 	private String name;
 	private boolean nullable;
+	private boolean pkMember;
 }

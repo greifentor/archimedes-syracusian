@@ -9,6 +9,7 @@ import de.ollie.archimedes.syracusian.importer.core.service.DatabaseConnectionFa
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseSchemeImporterService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.ColumnReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.DatabaseSchemeReaderService;
+import de.ollie.archimedes.syracusian.importer.core.service.reader.PkReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.TableReaderService;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 import jakarta.inject.Named;
@@ -23,6 +24,7 @@ class DatabaseSchemeImporterServiceImpl implements DatabaseSchemeImporterService
 	private final ColumnReaderService columnReaderService;
 	private final DatabaseConnectionFactory databaseConnectionFactory;
 	private final DatabaseSchemeReaderService databaseSchemeReaderService;
+	private final PkReaderService pkReaderService;
 	private final TableReaderService tableReaderService;
 
 	@Override
@@ -35,7 +37,10 @@ class DatabaseSchemeImporterServiceImpl implements DatabaseSchemeImporterService
 			scheme.setTables(tableReaderService.read(schemeName, connection));
 			scheme
 				.getTables()
-				.forEach(table -> table.setColumns(columnReaderService.read(scheme.getName(), table.getName(), connection)));
+				.forEach(table -> {
+					table.setColumns(columnReaderService.read(scheme.getName(), table.getName(), connection));
+					table.setPksByColumnNames(pkReaderService.read(scheme.getName(), table.getName(), connection));
+				});
 			return scheme;
 		} catch (SQLException e) {
 			throw new ImportFailureException(

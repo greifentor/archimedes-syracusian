@@ -13,6 +13,7 @@ import de.ollie.archimedes.syracusian.importer.core.model.TableMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseConnectionFactory;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.ColumnReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.DatabaseSchemeReaderService;
+import de.ollie.archimedes.syracusian.importer.core.service.reader.PkReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.TableReaderService;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 import java.sql.Connection;
@@ -49,6 +50,9 @@ class DatabaseSchemeImporterServiceImplTest {
 
 	@Mock
 	private DatabaseSchemeReaderService databaseSchemeReaderService;
+
+	@Mock
+	private PkReaderService pkReaderService;
 
 	@Mock
 	private TableMDO tableA;

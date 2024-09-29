@@ -4,10 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException;
 import de.ollie.archimedes.syracusian.importer.core.model.TableMDO;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Set;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -45,6 +47,15 @@ class DefaultTableAccessorImplTest {
 		@Test
 		void throwsAnException_passingANullValueAsSchemeName() {
 			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.getTables(null, connection));
+		}
+
+		@Test
+		void throwsAnException_whenSomethingWentWrongWhileRetrievingPks() throws Exception {
+			// Prepare
+			when(connection.getMetaData()).thenReturn(metaData);
+			when(metaData.getTables(null, SCHEME_NAME, "%", new String[] { "TABLE" })).thenThrow(new SQLException());
+			// Run & Check
+			assertThrows(ImportFailureException.class, () -> unitUnderTest.getTables(SCHEME_NAME, connection));
 		}
 
 		@Test

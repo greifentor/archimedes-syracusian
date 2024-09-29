@@ -4,10 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException;
 import de.ollie.archimedes.syracusian.importer.core.model.ColumnMDO;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Set;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -43,7 +45,7 @@ class DefaultColumnAccessorImplTest {
 	private DefaultColumnAccessorImpl unitUnderTest;
 
 	@Nested
-	class TestsOfMethod_getTables_String_String_Connection {
+	class TestsOfMethod_getColumns_String_String_Connection {
 
 		@Test
 		void throwsAnException_passingConnectionAsNullValue() {
@@ -58,6 +60,15 @@ class DefaultColumnAccessorImplTest {
 		@Test
 		void throwsAnException_passingSchemeNameAsNullValue() {
 			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.getColumns(null, TABLE_NAME, connection));
+		}
+
+		@Test
+		void throwsAnException_whenSomethingWentWrongWhileRetrievingPks() throws Exception {
+			// Prepare
+			when(connection.getMetaData()).thenReturn(databaseMetaData);
+			when(databaseMetaData.getColumns(null, SCHEME_NAME, TABLE_NAME, "%")).thenThrow(new SQLException());
+			// Run & Check
+			assertThrows(ImportFailureException.class, () -> unitUnderTest.getColumns(SCHEME_NAME, TABLE_NAME, connection));
 		}
 
 		@Test
