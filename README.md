@@ -14,7 +14,7 @@ based on the database scheme.
 As Syracus was last city were the real Archimedes lived, I took that name as this
 version of the Archimedes application should be the final one.
 
-## History
+## History 
 
 Archimedes as provided also in my on my Github account, has been created in 2004. Over
 the years the application got new functionalities and lost unused ones. More than once 
