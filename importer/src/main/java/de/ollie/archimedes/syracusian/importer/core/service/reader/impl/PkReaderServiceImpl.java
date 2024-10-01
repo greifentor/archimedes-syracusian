@@ -5,34 +5,16 @@ import static de.ollie.archimedes.syracusian.util.Check.ensure;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseTypeService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.PkReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.accessor.PkAccessor;
-import de.ollie.archimedes.syracusian.model.DatabaseType;
-import jakarta.annotation.PostConstruct;
 import jakarta.inject.Named;
 import java.sql.Connection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import lombok.RequiredArgsConstructor;
 
 @Named
-@RequiredArgsConstructor
-public class PkReaderServiceImpl implements PkReaderService {
+public class PkReaderServiceImpl extends AbstractReaderServiceImpl<PkAccessor> implements PkReaderService {
 
-	private final DatabaseTypeService databaseTypeService;
-	private final List<PkAccessor> pkAccessors;
-
-	private final Map<DatabaseType, PkAccessor> accessors = new HashMap<>();
-	private PkAccessor defaultAccessor;
-
-	@PostConstruct
-	void postConstruct() {
-		pkAccessors.stream().forEach(a -> accessors.put(a.getDatabaseType(), a));
-		ensure(
-			accessors.containsKey(DatabaseType.UNSPECIFIED),
-			new IllegalStateException("PkAccessor implementation for UNSPECIFIED missed!")
-		);
-		defaultAccessor = accessors.get(DatabaseType.UNSPECIFIED);
+	public PkReaderServiceImpl(DatabaseTypeService databaseTypeService, List<PkAccessor> accessorsList) {
+		super(databaseTypeService, accessorsList);
 	}
 
 	@Override
