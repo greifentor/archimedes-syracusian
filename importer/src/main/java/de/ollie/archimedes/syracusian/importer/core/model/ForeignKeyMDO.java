@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Data
 @Generated
-public class ForeignKeyDBO {
+public class ForeignKeyMDO {
 
 	private String name;
 	private String columnName;

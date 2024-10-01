@@ -84,7 +84,7 @@ public class PkReaderServiceImplTest {
 		}
 
 		@Test
-		void returnsA_whenAnAccessorIsDefinedForDatabaseTypeUNSPECIFIEDOnly() {
+		void returnsASetWithTheCorrectColumnNames_whenAnAccessorIsDefinedForDatabaseTypeUNSPECIFIEDOnly() {
 			// Prepare
 			Set<String> expected = Set.of(COLUMN_NAME);
 			when(accessor0.getDatabaseType()).thenReturn(DatabaseType.UNSPECIFIED);
@@ -99,7 +99,7 @@ public class PkReaderServiceImplTest {
 		}
 
 		@Test
-		void throwsAnException_whenAnAccessorIsDefinedForSpecifiedDatabaseType() {
+		void returnsASetWithTheCorrectColumnNames_whenAnAccessorIsDefinedForSpecifiedDatabaseType() {
 			// Prepare
 			Set<String> expected = Set.of(COLUMN_NAME);
 			when(accessor0.getDatabaseType()).thenReturn(DatabaseType.UNSPECIFIED);

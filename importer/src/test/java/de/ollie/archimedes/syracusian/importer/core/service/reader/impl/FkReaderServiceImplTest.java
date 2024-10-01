@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import de.ollie.archimedes.syracusian.importer.core.model.ColumnMDO;
+import de.ollie.archimedes.syracusian.importer.core.model.ForeignKeyMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseTypeService;
-import de.ollie.archimedes.syracusian.importer.core.service.reader.accessor.ColumnAccessor;
+import de.ollie.archimedes.syracusian.importer.core.service.reader.accessor.FkAccessor;
 import de.ollie.archimedes.syracusian.model.DatabaseType;
 import java.sql.Connection;
 import java.util.List;
@@ -20,19 +20,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class ColumnReaderServiceImplTest {
+public class FkReaderServiceImplTest {
 
 	private static final String SCHEME_NAME = "scheme-name";
 	private static final String TABLE_NAME = "table-name";
-
-	@Mock
-	private ColumnMDO column;
-
-	@Mock
-	private ColumnAccessor accessor0;
-
-	@Mock
-	private ColumnAccessor accessor1;
 
 	@Mock
 	private Connection connection;
@@ -41,10 +32,19 @@ class ColumnReaderServiceImplTest {
 	private DatabaseTypeService databaseTypeService;
 
 	@Mock
-	private List<ColumnAccessor> accessors;
+	private FkAccessor accessor0;
+
+	@Mock
+	private FkAccessor accessor1;
+
+	@Mock
+	private ForeignKeyMDO foreignKey0;
+
+	@Mock
+	private List<FkAccessor> accessors;
 
 	@InjectMocks
-	private ColumnReaderServiceImpl unitUnderTest;
+	private FkReaderServiceImpl unitUnderTest;
 
 	@Nested
 	class TestsOfMethod_postConstruct {
@@ -83,32 +83,32 @@ class ColumnReaderServiceImplTest {
 		}
 
 		@Test
-		void returnsASetWithTheCorrectColumns_whenAnAccessorIsDefinedForDatabaseTypeUNSPECIFIEDOnly() {
+		void returnsASetWithCorrectForeignKey_whenAnAccessorIsDefinedForDatabaseTypeUNSPECIFIEDOnly() {
 			// Prepare
-			Set<ColumnMDO> expected = Set.of(column);
+			Set<ForeignKeyMDO> expected = Set.of(foreignKey0);
 			when(accessor0.getDatabaseType()).thenReturn(DatabaseType.UNSPECIFIED);
-			when(accessor0.getColumns(SCHEME_NAME, TABLE_NAME, connection)).thenReturn(expected);
+			when(accessor0.getFks(SCHEME_NAME, TABLE_NAME, connection)).thenReturn(expected);
 			when(accessors.stream()).thenReturn(Stream.of(accessor0));
 			when(databaseTypeService.getDatabaseType(connection)).thenReturn(DatabaseType.HSQL);
 			unitUnderTest.postConstruct();
 			// Run
-			Set<ColumnMDO> returned = unitUnderTest.read(SCHEME_NAME, TABLE_NAME, connection);
+			Set<ForeignKeyMDO> returned = unitUnderTest.read(SCHEME_NAME, TABLE_NAME, connection);
 			// Check
 			assertEquals(expected, returned);
 		}
 
 		@Test
-		void returnsASetWithTheCorrectColumns_whenAnAccessorIsDefinedForSpecifiedDatabaseType() {
+		void returnsASetWithCorrectForeignKey_whenAnAccessorIsDefinedForSpecifiedDatabaseType() {
 			// Prepare
-			Set<ColumnMDO> expected = Set.of(column);
+			Set<ForeignKeyMDO> expected = Set.of(foreignKey0);
 			when(accessor0.getDatabaseType()).thenReturn(DatabaseType.UNSPECIFIED);
 			when(accessor1.getDatabaseType()).thenReturn(DatabaseType.HSQL);
-			when(accessor1.getColumns(SCHEME_NAME, TABLE_NAME, connection)).thenReturn(expected);
+			when(accessor1.getFks(SCHEME_NAME, TABLE_NAME, connection)).thenReturn(expected);
 			when(accessors.stream()).thenReturn(Stream.of(accessor0, accessor1));
 			when(databaseTypeService.getDatabaseType(connection)).thenReturn(DatabaseType.HSQL);
 			unitUnderTest.postConstruct();
 			// Run
-			Set<ColumnMDO> returned = unitUnderTest.read(SCHEME_NAME, TABLE_NAME, connection);
+			Set<ForeignKeyMDO> returned = unitUnderTest.read(SCHEME_NAME, TABLE_NAME, connection);
 			// Check
 			assertEquals(expected, returned);
 		}

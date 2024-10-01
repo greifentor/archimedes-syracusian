@@ -3,10 +3,12 @@ package de.ollie.archimedes.syracusian.importer.core.service.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
+import de.ollie.archimedes.syracusian.importer.core.model.ForeignKeyMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseSchemeImporterService;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 import jakarta.inject.Inject;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -63,5 +65,34 @@ class DatabaseSchemeImporterServiceImplITest {
 	void happyRun_notNullColumnNames_forTableRACK() {
 		List<String> expected = List.of("ID", "TOKEN");
 		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("RACK").get().getNotNullColumnNames());
+	}
+
+	@Test
+	void happyRun_pkColumnNames_forTableBOOK() {
+		List<String> expected = List.of("ID");
+		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("BOOK").get().getPKColumnNames());
+	}
+
+	@Test
+	void happyRun_pkColumnNames_forTableRACK() {
+		List<String> expected = List.of("ID");
+		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("RACK").get().getPKColumnNames());
+	}
+
+	@Test
+	void happyRun_foreignKeys_forTableBOOK() {
+		Set<ForeignKeyMDO> expected = Set.of(
+			new ForeignKeyMDO()
+				.setColumnName("RACK")
+				.setName("SYS_FK_10103")
+				.setReferencedColumnName("ID")
+				.setReferencedTableName("RACK")
+		);
+		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("BOOK").get().getForeignKeys());
+	}
+
+	@Test
+	void happyRun_foreignKeys_forTableRACK() {
+		assertEquals(Set.of(), readDatabaseSchemeMDO().findTableByName("RACK").get().getForeignKeys());
 	}
 }

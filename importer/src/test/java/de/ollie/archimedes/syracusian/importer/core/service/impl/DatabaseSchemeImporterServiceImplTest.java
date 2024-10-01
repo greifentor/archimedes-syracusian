@@ -9,10 +9,12 @@ import static org.mockito.Mockito.when;
 import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException;
 import de.ollie.archimedes.syracusian.importer.core.model.ColumnMDO;
 import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
+import de.ollie.archimedes.syracusian.importer.core.model.ForeignKeyMDO;
 import de.ollie.archimedes.syracusian.importer.core.model.TableMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseConnectionFactory;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.ColumnReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.DatabaseSchemeReaderService;
+import de.ollie.archimedes.syracusian.importer.core.service.reader.FkReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.PkReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.TableReaderService;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
@@ -50,6 +52,15 @@ class DatabaseSchemeImporterServiceImplTest {
 
 	@Mock
 	private DatabaseSchemeReaderService databaseSchemeReaderService;
+
+	@Mock
+	private FkReaderService fkReaderService;
+
+	@Mock
+	private ForeignKeyMDO foreignKeyA;
+
+	@Mock
+	private ForeignKeyMDO foreignKeyB;
 
 	@Mock
 	private PkReaderService pkReaderService;
@@ -126,6 +137,23 @@ class DatabaseSchemeImporterServiceImplTest {
 			// Check
 			verify(tableA, times(1)).setColumns(Set.of(columnA));
 			verify(tableB, times(1)).setColumns(Set.of(columnB));
+		}
+
+		@Test
+		void returnsDataschemeObject_withForeignKeyOfTablesSet() throws Exception {
+			// Prepare
+			when(databaseConnectionFactory.create(connectionData)).thenReturn(connection);
+			when(databaseSchemeReaderService.read(connection)).thenReturn(new DatabaseSchemeMDO(SCHEME_NAME, Set.of()));
+			when(tableReaderService.read(SCHEME_NAME, connection)).thenReturn(Set.of(tableB, tableA));
+			when(tableA.getName()).thenReturn(TABLE_NAME_A);
+			when(tableB.getName()).thenReturn(TABLE_NAME_B);
+			when(fkReaderService.read(SCHEME_NAME, TABLE_NAME_A, connection)).thenReturn(Set.of(foreignKeyA));
+			when(fkReaderService.read(SCHEME_NAME, TABLE_NAME_B, connection)).thenReturn(Set.of(foreignKeyB));
+			// Run
+			unitUnderTest.readDatabaseScheme(SCHEME_NAME, connectionData);
+			// Check
+			verify(tableA, times(1)).setForeignKeys(Set.of(foreignKeyA));
+			verify(tableB, times(1)).setForeignKeys(Set.of(foreignKeyB));
 		}
 	}
 }
