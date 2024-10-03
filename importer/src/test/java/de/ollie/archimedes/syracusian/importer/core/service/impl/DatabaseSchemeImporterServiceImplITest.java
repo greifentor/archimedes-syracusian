@@ -39,7 +39,7 @@ class DatabaseSchemeImporterServiceImplITest {
 
 	@Test
 	void happyRun_tableNames() {
-		List<String> expected = List.of("BOOK", "RACK");
+		List<String> expected = List.of("AUTHOR", "AUTHOR_BOOK", "BOOK", "RACK", "ROOM");
 		assertEquals(expected, readDatabaseSchemeMDO().getTableNames());
 	}
 
@@ -51,7 +51,7 @@ class DatabaseSchemeImporterServiceImplITest {
 
 	@Test
 	void happyRun_columnNames_forTableRACK() {
-		List<String> expected = List.of("ID", "TOKEN");
+		List<String> expected = List.of("ID", "ROOM", "TOKEN");
 		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("RACK").get().getColumnNames());
 	}
 
@@ -65,6 +65,12 @@ class DatabaseSchemeImporterServiceImplITest {
 	void happyRun_notNullColumnNames_forTableRACK() {
 		List<String> expected = List.of("ID", "TOKEN");
 		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("RACK").get().getNotNullColumnNames());
+	}
+
+	@Test
+	void happyRun_pkColumnNames_forTableAUTHOR_BOOK() {
+		List<String> expected = List.of("AUTHOR", "BOOK");
+		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("AUTHOR_BOOK").get().getPKColumnNames());
 	}
 
 	@Test
@@ -84,7 +90,7 @@ class DatabaseSchemeImporterServiceImplITest {
 		Set<ForeignKeyMDO> expected = Set.of(
 			new ForeignKeyMDO()
 				.setColumnName("RACK")
-				.setName("SYS_FK_10103")
+				.setName("FK_BOOK_RACK_TO_RACK")
 				.setReferencedColumnName("ID")
 				.setReferencedTableName("RACK")
 		);
@@ -93,6 +99,18 @@ class DatabaseSchemeImporterServiceImplITest {
 
 	@Test
 	void happyRun_foreignKeys_forTableRACK() {
-		assertEquals(Set.of(), readDatabaseSchemeMDO().findTableByName("RACK").get().getForeignKeys());
+		Set<ForeignKeyMDO> expected = Set.of(
+			new ForeignKeyMDO()
+				.setColumnName("ROOM")
+				.setName("FK_RACK_ROOM_TO_ROOM")
+				.setReferencedColumnName("ID")
+				.setReferencedTableName("ROOM")
+		);
+		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("RACK").get().getForeignKeys());
+	}
+
+	@Test
+	void happyRun_foreignKeys_forTableROOM() {
+		assertEquals(Set.of(), readDatabaseSchemeMDO().findTableByName("ROOM").get().getForeignKeys());
 	}
 }
