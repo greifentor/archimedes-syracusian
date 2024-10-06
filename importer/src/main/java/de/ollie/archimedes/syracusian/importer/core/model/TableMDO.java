@@ -21,6 +21,7 @@ public class TableMDO {
 	private String name;
 	private Set<ColumnMDO> columns = new HashSet<>();
 	private Set<ForeignKeyMDO> foreignKeys = new HashSet<>();
+	private Set<UniqueConstraintMDO> uniqueConstraints = new HashSet<>();
 
 	public Optional<ColumnMDO> findColumnByName(String columnName) {
 		ensure(columnName != null, "column name cannot be null!");

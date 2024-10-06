@@ -17,6 +17,7 @@ import de.ollie.archimedes.syracusian.importer.core.service.reader.DatabaseSchem
 import de.ollie.archimedes.syracusian.importer.core.service.reader.FkReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.PkReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.TableReaderService;
+import de.ollie.archimedes.syracusian.importer.core.service.reader.UniqueConstraintsReaderService;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -73,6 +74,9 @@ class DatabaseSchemeImporterServiceImplTest {
 
 	@Mock
 	private TableReaderService tableReaderService;
+
+	@Mock
+	private UniqueConstraintsReaderService uniqueConstraintsReaderService;
 
 	@Mock
 	private JDBCConnectionData connectionData;

@@ -12,6 +12,7 @@ import de.ollie.archimedes.syracusian.importer.core.service.reader.DatabaseSchem
 import de.ollie.archimedes.syracusian.importer.core.service.reader.FkReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.PkReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.TableReaderService;
+import de.ollie.archimedes.syracusian.importer.core.service.reader.UniqueConstraintsReaderService;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 import jakarta.inject.Named;
 import java.sql.Connection;
@@ -28,6 +29,7 @@ class DatabaseSchemeImporterServiceImpl implements DatabaseSchemeImporterService
 	private final FkReaderService fkReaderService;
 	private final PkReaderService pkReaderService;
 	private final TableReaderService tableReaderService;
+	private final UniqueConstraintsReaderService uniqueConstaintsReaderService;
 
 	@Override
 	public DatabaseSchemeMDO readDatabaseScheme(String schemeName, JDBCConnectionData jdbcConnectionData) {
@@ -43,6 +45,7 @@ class DatabaseSchemeImporterServiceImpl implements DatabaseSchemeImporterService
 					table.setColumns(columnReaderService.read(scheme.getName(), table.getName(), connection));
 					table.setPksByColumnNames(pkReaderService.read(scheme.getName(), table.getName(), connection));
 					table.setForeignKeys(fkReaderService.read(scheme.getName(), table.getName(), connection));
+					table.setUniqueConstraints(uniqueConstaintsReaderService.read(scheme.getName(), table.getName(), connection));
 				});
 			return scheme;
 		} catch (SQLException e) {

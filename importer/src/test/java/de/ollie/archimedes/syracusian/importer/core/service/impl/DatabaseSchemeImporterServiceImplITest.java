@@ -4,11 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
 import de.ollie.archimedes.syracusian.importer.core.model.ForeignKeyMDO;
+import de.ollie.archimedes.syracusian.importer.core.model.UniqueConstraintMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseSchemeImporterService;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Set;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -112,5 +114,39 @@ class DatabaseSchemeImporterServiceImplITest {
 	@Test
 	void happyRun_foreignKeys_forTableROOM() {
 		assertEquals(Set.of(), readDatabaseSchemeMDO().findTableByName("ROOM").get().getForeignKeys());
+	}
+
+	@Disabled
+	@Test
+	void happyRun_uniques_forTableAUTHOR() {
+		assertEquals(
+			Set.of(
+				new UniqueConstraintMDO()
+					.setColumnNames(Set.of("DATE_OF_BIRTH", "FORE_NAME", "LAST_NAME"))
+					.setName("SYS_IDX_U_AUTHOR_LAST_NAME_FORE_NAME_DATE_OF_BIRTH_10120")
+			),
+			readDatabaseSchemeMDO().findTableByName("AUTHOR").get().getUniqueConstraints()
+		);
+	}
+
+	@Disabled
+	@Test
+	void happyRun_uniques_forTableBOOK() {
+		assertEquals(
+			Set.of(new UniqueConstraintMDO().setColumnNames(Set.of("SIGNATURE")).setName("SYS_IDX_AUTHOR_BOOK_PK_10121")),
+			readDatabaseSchemeMDO().findTableByName("BOOK").get().getUniqueConstraints()
+		);
+	}
+
+	@Disabled
+	@Test
+	void happyRun_uniques_forTableROOM() {
+		assertEquals(
+			Set.of(
+				new UniqueConstraintMDO().setColumnNames(Set.of("DESCRIPTION")).setName("SYS_IDX_SYS_CT_10108_10113"),
+				new UniqueConstraintMDO().setColumnNames(Set.of("TOKEN")).setName("SYS_IDX_SYS_CT_10109_10114")
+			),
+			readDatabaseSchemeMDO().findTableByName("ROOM").get().getUniqueConstraints()
+		);
 	}
 }
