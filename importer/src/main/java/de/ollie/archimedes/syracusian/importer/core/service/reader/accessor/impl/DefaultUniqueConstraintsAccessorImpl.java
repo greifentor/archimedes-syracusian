@@ -5,6 +5,7 @@ import static de.ollie.archimedes.syracusian.util.Check.ensure;
 import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException;
 import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException.MessageParameter;
 import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException.ReasonType;
+import de.ollie.archimedes.syracusian.importer.core.model.TableMDO;
 import de.ollie.archimedes.syracusian.importer.core.model.UniqueConstraintMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.accessor.UniqueConstraintsAccessor;
 import de.ollie.archimedes.syracusian.model.DatabaseType;
@@ -26,13 +27,13 @@ public class DefaultUniqueConstraintsAccessorImpl implements UniqueConstraintsAc
 	}
 
 	@Override
-	public Set<UniqueConstraintMDO> getUniqueConstraints(String schemeName, String tableName, Connection connection) {
+	public Set<UniqueConstraintMDO> getUniqueConstraints(String schemeName, TableMDO table, Connection connection) {
 		ensure(connection != null, "connection cannot be null!");
 		ensure(schemeName != null, "scheme name cannot be null!");
-		ensure(tableName != null, "table name cannot be null!");
+		ensure(table != null, "table cannot be null!");
 		try {
 			Map<String, UniqueConstraintMDO> ucs = new HashMap<>();
-			ResultSet rs = connection.getMetaData().getIndexInfo(null, schemeName, tableName, true, false);
+			ResultSet rs = connection.getMetaData().getIndexInfo(null, schemeName, table.getName(), true, false);
 			while (rs.next()) {
 				String name = rs.getString("INDEX_NAME");
 				UniqueConstraintMDO uc = ucs.get(name);
@@ -42,14 +43,19 @@ public class DefaultUniqueConstraintsAccessorImpl implements UniqueConstraintsAc
 				}
 				uc.addColumn(rs.getString("COLUMN_NAME"));
 			}
-			return ucs.entrySet().stream().map(e -> e.getValue()).collect(Collectors.toSet());
+			return ucs
+				.entrySet()
+				.stream()
+				.map(e -> e.getValue())
+				.filter(uc -> !table.isPrimaryKeyConstraint(uc))
+				.collect(Collectors.toSet());
 		} catch (SQLException e) {
 			throw new ImportFailureException(
 				"reading unique constraints from connection failed",
 				ReasonType.COLUMN_DATA_READ_ERROR,
 				e,
 				new MessageParameter("scheme", schemeName),
-				new MessageParameter("table", tableName)
+				new MessageParameter("table", table.getName())
 			);
 		}
 	}

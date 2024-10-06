@@ -1,8 +1,8 @@
 package de.ollie.archimedes.syracusian.importer.core.service.reader;
 
+import de.ollie.archimedes.syracusian.importer.core.model.PrimaryKeyMDO;
 import java.sql.Connection;
-import java.util.Set;
 
 public interface PkReaderService {
-	Set<String> read(String schemeName, String tableName, Connection connection);
+	PrimaryKeyMDO read(String schemeName, String tableName, Connection connection);
 }

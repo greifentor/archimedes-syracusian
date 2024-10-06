@@ -1,6 +1,7 @@
 package de.ollie.archimedes.syracusian.importer.core.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -20,6 +21,7 @@ class TableMDOTest {
 	private static final String COLUMN_NAME_0 = "column-0";
 	private static final String COLUMN_NAME_1 = "column-1";
 	private static final String COLUMN_NAME_2 = "column-2";
+	private static final String PK_NAME = "pk-name";
 
 	@InjectMocks
 	private TableMDO unitUnderTest;
@@ -104,25 +106,70 @@ class TableMDOTest {
 	}
 
 	@Nested
-	class TestsOfMethod_getPKColumnNames {
+	class TestsOfMethod_getPkColumnNames {
 
 		@Test
 		void returnsAnEmptyList_whenTableHasNoColumns() {
-			assertTrue(unitUnderTest.getPKColumnNames().isEmpty());
+			assertTrue(unitUnderTest.getPkColumnNames().isEmpty());
 		}
 
 		@Test
 		void returnsASortedListWithTheColumnNames_whenTableColumns() {
 			// Prepare
-			Set<ColumnMDO> columns = Set.of(
-				new ColumnMDO().setName(COLUMN_NAME_0).setPkMember(false),
-				new ColumnMDO().setName(COLUMN_NAME_1).setPkMember(true)
-			);
-			unitUnderTest.setColumns(columns);
+			PrimaryKeyMDO pk = new PrimaryKeyMDO().setMemberColumnNames(Set.of(COLUMN_NAME_1));
+			unitUnderTest.setPrimaryKey(pk);
 			// Run
-			List<String> returned = unitUnderTest.getPKColumnNames();
+			List<String> returned = unitUnderTest.getPkColumnNames();
 			// Check
 			assertEquals(List.of(COLUMN_NAME_1), returned);
+		}
+	}
+
+	@Nested
+	class TestsOfMethod_isPrimaryKeyConstraint_UniqueConstraintMDO {
+
+		@Test
+		void returnsFalse_passingANullValueAsPrimaryKeyConstraint() {
+			assertFalse(unitUnderTest.isPrimaryKeyConstraint(null));
+		}
+
+		@Test
+		void returnsFalse_whenTableHasNoPrimaryKey() {
+			// Prepare
+			UniqueConstraintMDO uc = new UniqueConstraintMDO().setColumnNames(Set.of(COLUMN_NAME_0));
+			unitUnderTest.setPrimaryKey(null);
+			// Run & Check
+			assertFalse(unitUnderTest.isPrimaryKeyConstraint(uc));
+		}
+
+		@Test
+		void returnsFalse_passingAnUnmatchingPrimaryKeyName_0() {
+			// Prepare
+			UniqueConstraintMDO uc = new UniqueConstraintMDO().setColumnNames(Set.of(COLUMN_NAME_1));
+			PrimaryKeyMDO pk = new PrimaryKeyMDO().setMemberColumnNames(Set.of(COLUMN_NAME_0));
+			unitUnderTest.setPrimaryKey(pk);
+			// Run & Check
+			assertFalse(unitUnderTest.isPrimaryKeyConstraint(uc));
+		}
+
+		@Test
+		void returnsFalse_passingAnUnmatchingPrimaryKeyName_1() {
+			// Prepare
+			UniqueConstraintMDO uc = new UniqueConstraintMDO().setColumnNames(Set.of(COLUMN_NAME_1, COLUMN_NAME_2));
+			PrimaryKeyMDO pk = new PrimaryKeyMDO().setMemberColumnNames(Set.of(COLUMN_NAME_1));
+			unitUnderTest.setPrimaryKey(pk);
+			// Run & Check
+			assertFalse(unitUnderTest.isPrimaryKeyConstraint(uc));
+		}
+
+		@Test
+		void returnsTrue_passingAMatchingPrimaryKeyName() {
+			// Prepare
+			UniqueConstraintMDO uc = new UniqueConstraintMDO().setColumnNames(Set.of(COLUMN_NAME_0));
+			PrimaryKeyMDO pk = new PrimaryKeyMDO().setMemberColumnNames(Set.of(COLUMN_NAME_0));
+			unitUnderTest.setPrimaryKey(pk);
+			// Run & Check
+			assertTrue(unitUnderTest.isPrimaryKeyConstraint(uc));
 		}
 	}
 
@@ -142,16 +189,12 @@ class TableMDOTest {
 		@Test
 		void setsTheColumnsWithThePassedNamesAsPks() {
 			// Prepare
-			Set<ColumnMDO> columns = Set.of(
-				new ColumnMDO().setName(COLUMN_NAME_0).setPkMember(false),
-				new ColumnMDO().setName(COLUMN_NAME_1).setPkMember(false),
-				new ColumnMDO().setName(COLUMN_NAME_2).setPkMember(false)
-			);
-			unitUnderTest.setColumns(columns);
+			PrimaryKeyMDO pk = new PrimaryKeyMDO().setMemberColumnNames(Set.of(COLUMN_NAME_2, COLUMN_NAME_1));
+			unitUnderTest.setPrimaryKey(pk);
 			// Run
 			unitUnderTest.setPksByColumnNames(Set.of(COLUMN_NAME_1, COLUMN_NAME_2));
 			// Check
-			assertEquals(List.of(COLUMN_NAME_1, COLUMN_NAME_2), unitUnderTest.getPKColumnNames());
+			assertEquals(List.of(COLUMN_NAME_1, COLUMN_NAME_2), unitUnderTest.getPkColumnNames());
 		}
 	}
 }

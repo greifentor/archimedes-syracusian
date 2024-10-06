@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Data;
 import lombok.Generated;
@@ -19,6 +20,7 @@ import lombok.experimental.Accessors;
 public class TableMDO {
 
 	private String name;
+	private PrimaryKeyMDO primaryKey;
 	private Set<ColumnMDO> columns = new HashSet<>();
 	private Set<ForeignKeyMDO> foreignKeys = new HashSet<>();
 	private Set<UniqueConstraintMDO> uniqueConstraints = new HashSet<>();
@@ -40,8 +42,13 @@ public class TableMDO {
 		return toNamesList(columns.stream().filter(c -> !c.isNullable()));
 	}
 
-	public List<String> getPKColumnNames() {
-		return toNamesList(columns.stream().filter(c -> c.isPkMember()));
+	public List<String> getPkColumnNames() {
+		return primaryKey != null ? primaryKey.getMemberColumnNames().stream().sorted().toList() : List.of();
+	}
+
+	public boolean isPrimaryKeyConstraint(UniqueConstraintMDO uc) {
+		Set<String> pkColumnNames = getPkColumnNames().stream().collect(Collectors.toSet());
+		return (uc != null) && pkColumnNames.equals(uc.getColumnNames());
 	}
 
 	public TableMDO setPksByColumnNames(Set<String> pkColumnNames) {

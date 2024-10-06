@@ -10,7 +10,6 @@ import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
 import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Set;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -72,19 +71,19 @@ class DatabaseSchemeImporterServiceImplITest {
 	@Test
 	void happyRun_pkColumnNames_forTableAUTHOR_BOOK() {
 		List<String> expected = List.of("AUTHOR", "BOOK");
-		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("AUTHOR_BOOK").get().getPKColumnNames());
+		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("AUTHOR_BOOK").get().getPkColumnNames());
 	}
 
 	@Test
 	void happyRun_pkColumnNames_forTableBOOK() {
 		List<String> expected = List.of("ID");
-		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("BOOK").get().getPKColumnNames());
+		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("BOOK").get().getPkColumnNames());
 	}
 
 	@Test
 	void happyRun_pkColumnNames_forTableRACK() {
 		List<String> expected = List.of("ID");
-		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("RACK").get().getPKColumnNames());
+		assertEquals(expected, readDatabaseSchemeMDO().findTableByName("RACK").get().getPkColumnNames());
 	}
 
 	@Test
@@ -116,35 +115,32 @@ class DatabaseSchemeImporterServiceImplITest {
 		assertEquals(Set.of(), readDatabaseSchemeMDO().findTableByName("ROOM").get().getForeignKeys());
 	}
 
-	@Disabled
 	@Test
 	void happyRun_uniques_forTableAUTHOR() {
 		assertEquals(
 			Set.of(
 				new UniqueConstraintMDO()
 					.setColumnNames(Set.of("DATE_OF_BIRTH", "FORE_NAME", "LAST_NAME"))
-					.setName("SYS_IDX_U_AUTHOR_LAST_NAME_FORE_NAME_DATE_OF_BIRTH_10120")
+					.setName("SYS_IDX_U_AUTHOR_LAST_NAME_FORE_NAME_DATE_OF_BIRTH_10119")
 			),
 			readDatabaseSchemeMDO().findTableByName("AUTHOR").get().getUniqueConstraints()
 		);
 	}
 
-	@Disabled
 	@Test
 	void happyRun_uniques_forTableBOOK() {
 		assertEquals(
-			Set.of(new UniqueConstraintMDO().setColumnNames(Set.of("SIGNATURE")).setName("SYS_IDX_AUTHOR_BOOK_PK_10121")),
+			Set.of(new UniqueConstraintMDO().setColumnNames(Set.of("SIGNATURE")).setName("SYS_IDX_U_BOOK_SIGNATURE_10098")),
 			readDatabaseSchemeMDO().findTableByName("BOOK").get().getUniqueConstraints()
 		);
 	}
 
-	@Disabled
 	@Test
 	void happyRun_uniques_forTableROOM() {
 		assertEquals(
 			Set.of(
-				new UniqueConstraintMDO().setColumnNames(Set.of("DESCRIPTION")).setName("SYS_IDX_SYS_CT_10108_10113"),
-				new UniqueConstraintMDO().setColumnNames(Set.of("TOKEN")).setName("SYS_IDX_SYS_CT_10109_10114")
+				new UniqueConstraintMDO().setColumnNames(Set.of("DESCRIPTION")).setName("SYS_IDX_SYS_CT_10107_10112"),
+				new UniqueConstraintMDO().setColumnNames(Set.of("TOKEN")).setName("SYS_IDX_SYS_CT_10108_10113")
 			),
 			readDatabaseSchemeMDO().findTableByName("ROOM").get().getUniqueConstraints()
 		);

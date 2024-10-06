@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import de.ollie.archimedes.syracusian.importer.core.model.ColumnMDO;
+import de.ollie.archimedes.syracusian.importer.core.model.PrimaryKeyMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseTypeService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.accessor.PkAccessor;
 import de.ollie.archimedes.syracusian.model.DatabaseType;
@@ -86,14 +87,14 @@ public class PkReaderServiceImplTest {
 		@Test
 		void returnsASetWithTheCorrectColumnNames_whenAnAccessorIsDefinedForDatabaseTypeUNSPECIFIEDOnly() {
 			// Prepare
-			Set<String> expected = Set.of(COLUMN_NAME);
+			PrimaryKeyMDO expected = new PrimaryKeyMDO().setMemberColumnNames(Set.of(COLUMN_NAME));
 			when(accessor0.getDatabaseType()).thenReturn(DatabaseType.UNSPECIFIED);
-			when(accessor0.getPkColumnNames(SCHEME_NAME, TABLE_NAME, connection)).thenReturn(expected);
+			when(accessor0.getPk(SCHEME_NAME, TABLE_NAME, connection)).thenReturn(expected);
 			when(accessors.stream()).thenReturn(Stream.of(accessor0));
 			when(databaseTypeService.getDatabaseType(connection)).thenReturn(DatabaseType.HSQL);
 			unitUnderTest.postConstruct();
 			// Run
-			Set<String> returned = unitUnderTest.read(SCHEME_NAME, TABLE_NAME, connection);
+			PrimaryKeyMDO returned = unitUnderTest.read(SCHEME_NAME, TABLE_NAME, connection);
 			// Check
 			assertEquals(expected, returned);
 		}
@@ -101,15 +102,15 @@ public class PkReaderServiceImplTest {
 		@Test
 		void returnsASetWithTheCorrectColumnNames_whenAnAccessorIsDefinedForSpecifiedDatabaseType() {
 			// Prepare
-			Set<String> expected = Set.of(COLUMN_NAME);
+			PrimaryKeyMDO expected = new PrimaryKeyMDO().setMemberColumnNames(Set.of(COLUMN_NAME));
 			when(accessor0.getDatabaseType()).thenReturn(DatabaseType.UNSPECIFIED);
 			when(accessor1.getDatabaseType()).thenReturn(DatabaseType.HSQL);
-			when(accessor1.getPkColumnNames(SCHEME_NAME, TABLE_NAME, connection)).thenReturn(expected);
+			when(accessor1.getPk(SCHEME_NAME, TABLE_NAME, connection)).thenReturn(expected);
 			when(accessors.stream()).thenReturn(Stream.of(accessor0, accessor1));
 			when(databaseTypeService.getDatabaseType(connection)).thenReturn(DatabaseType.HSQL);
 			unitUnderTest.postConstruct();
 			// Run
-			Set<String> returned = unitUnderTest.read(SCHEME_NAME, TABLE_NAME, connection);
+			PrimaryKeyMDO returned = unitUnderTest.read(SCHEME_NAME, TABLE_NAME, connection);
 			// Check
 			assertEquals(expected, returned);
 		}

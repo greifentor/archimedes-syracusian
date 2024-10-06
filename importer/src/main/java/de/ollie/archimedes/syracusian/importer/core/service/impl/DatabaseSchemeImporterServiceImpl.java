@@ -43,9 +43,9 @@ class DatabaseSchemeImporterServiceImpl implements DatabaseSchemeImporterService
 				.getTables()
 				.forEach(table -> {
 					table.setColumns(columnReaderService.read(scheme.getName(), table.getName(), connection));
-					table.setPksByColumnNames(pkReaderService.read(scheme.getName(), table.getName(), connection));
+					table.setPrimaryKey(pkReaderService.read(scheme.getName(), table.getName(), connection));
 					table.setForeignKeys(fkReaderService.read(scheme.getName(), table.getName(), connection));
-					table.setUniqueConstraints(uniqueConstaintsReaderService.read(scheme.getName(), table.getName(), connection));
+					table.setUniqueConstraints(uniqueConstaintsReaderService.read(scheme.getName(), table, connection));
 				});
 			return scheme;
 		} catch (SQLException e) {

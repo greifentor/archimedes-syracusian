@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import de.ollie.archimedes.syracusian.importer.core.model.TableMDO;
 import de.ollie.archimedes.syracusian.importer.core.model.UniqueConstraintMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseTypeService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.accessor.UniqueConstraintsAccessor;
@@ -23,13 +24,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class UniqueConstraintsReaderServiceImplTest {
 
 	private static final String SCHEME_NAME = "scheme-name";
-	private static final String TABLE_NAME = "table-name";
 
 	@Mock
 	private Connection connection;
 
 	@Mock
 	private DatabaseTypeService databaseTypeService;
+
+	@Mock
+	private TableMDO table;
 
 	@Mock
 	private UniqueConstraintsAccessor accessor0;
@@ -69,12 +72,12 @@ public class UniqueConstraintsReaderServiceImplTest {
 
 		@Test
 		void throwsAnException_passingConnectionAsNullValue() {
-			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.read(SCHEME_NAME, TABLE_NAME, null));
+			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.read(SCHEME_NAME, table, null));
 		}
 
 		@Test
 		void throwsAnException_passingSchemeNameAsNullValue() {
-			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.read(null, TABLE_NAME, connection));
+			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.read(null, table, connection));
 		}
 
 		@Test
@@ -87,12 +90,12 @@ public class UniqueConstraintsReaderServiceImplTest {
 			// Prepare
 			Set<UniqueConstraintMDO> expected = Set.of(uniqueConstraint0);
 			when(accessor0.getDatabaseType()).thenReturn(DatabaseType.UNSPECIFIED);
-			when(accessor0.getUniqueConstraints(SCHEME_NAME, TABLE_NAME, connection)).thenReturn(expected);
+			when(accessor0.getUniqueConstraints(SCHEME_NAME, table, connection)).thenReturn(expected);
 			when(accessors.stream()).thenReturn(Stream.of(accessor0));
 			when(databaseTypeService.getDatabaseType(connection)).thenReturn(DatabaseType.HSQL);
 			unitUnderTest.postConstruct();
 			// Run
-			Set<UniqueConstraintMDO> returned = unitUnderTest.read(SCHEME_NAME, TABLE_NAME, connection);
+			Set<UniqueConstraintMDO> returned = unitUnderTest.read(SCHEME_NAME, table, connection);
 			// Check
 			assertEquals(expected, returned);
 		}
@@ -103,12 +106,12 @@ public class UniqueConstraintsReaderServiceImplTest {
 			Set<UniqueConstraintMDO> expected = Set.of(uniqueConstraint0);
 			when(accessor0.getDatabaseType()).thenReturn(DatabaseType.UNSPECIFIED);
 			when(accessor1.getDatabaseType()).thenReturn(DatabaseType.HSQL);
-			when(accessor1.getUniqueConstraints(SCHEME_NAME, TABLE_NAME, connection)).thenReturn(expected);
+			when(accessor1.getUniqueConstraints(SCHEME_NAME, table, connection)).thenReturn(expected);
 			when(accessors.stream()).thenReturn(Stream.of(accessor0, accessor1));
 			when(databaseTypeService.getDatabaseType(connection)).thenReturn(DatabaseType.HSQL);
 			unitUnderTest.postConstruct();
 			// Run
-			Set<UniqueConstraintMDO> returned = unitUnderTest.read(SCHEME_NAME, TABLE_NAME, connection);
+			Set<UniqueConstraintMDO> returned = unitUnderTest.read(SCHEME_NAME, table, connection);
 			// Check
 			assertEquals(expected, returned);
 		}
