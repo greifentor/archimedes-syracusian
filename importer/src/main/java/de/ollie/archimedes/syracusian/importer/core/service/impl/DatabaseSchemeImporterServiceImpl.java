@@ -10,6 +10,7 @@ import de.ollie.archimedes.syracusian.importer.core.service.DatabaseSchemeImport
 import de.ollie.archimedes.syracusian.importer.core.service.reader.ColumnReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.DatabaseSchemeReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.FkReaderService;
+import de.ollie.archimedes.syracusian.importer.core.service.reader.IndicesReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.PkReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.TableReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.UniqueConstraintsReaderService;
@@ -27,6 +28,7 @@ class DatabaseSchemeImporterServiceImpl implements DatabaseSchemeImporterService
 	private final DatabaseConnectionFactory databaseConnectionFactory;
 	private final DatabaseSchemeReaderService databaseSchemeReaderService;
 	private final FkReaderService fkReaderService;
+	private final IndicesReaderService indicesReaderService;
 	private final PkReaderService pkReaderService;
 	private final TableReaderService tableReaderService;
 	private final UniqueConstraintsReaderService uniqueConstaintsReaderService;
@@ -45,6 +47,7 @@ class DatabaseSchemeImporterServiceImpl implements DatabaseSchemeImporterService
 					table.setColumns(columnReaderService.read(scheme.getName(), table.getName(), connection));
 					table.setPrimaryKey(pkReaderService.read(scheme.getName(), table.getName(), connection));
 					table.setForeignKeys(fkReaderService.read(scheme.getName(), table.getName(), connection));
+					table.setIndices(indicesReaderService.read(scheme.getName(), table, connection));
 					table.setUniqueConstraints(uniqueConstaintsReaderService.read(scheme.getName(), table, connection));
 				});
 			return scheme;

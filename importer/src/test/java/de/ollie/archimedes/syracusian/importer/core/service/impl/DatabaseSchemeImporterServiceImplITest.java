@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
 import de.ollie.archimedes.syracusian.importer.core.model.ForeignKeyMDO;
+import de.ollie.archimedes.syracusian.importer.core.model.IndexMDO;
 import de.ollie.archimedes.syracusian.importer.core.model.UniqueConstraintMDO;
 import de.ollie.archimedes.syracusian.importer.core.service.DatabaseSchemeImporterService;
 import de.ollie.archimedes.syracusian.model.JDBCConnectionData;
@@ -113,6 +114,38 @@ class DatabaseSchemeImporterServiceImplITest {
 	@Test
 	void happyRun_foreignKeys_forTableROOM() {
 		assertEquals(Set.of(), readDatabaseSchemeMDO().findTableByName("ROOM").get().getForeignKeys());
+	}
+
+	@Test
+	void happyRun_index_forTableAUTHOR() {
+		assertEquals(
+			Set.of(new IndexMDO().setColumnNames(Set.of("FORE_NAME", "LAST_NAME")).setName("IX_AUTHOR_FORE_NAME_LAST_NAME")),
+			readDatabaseSchemeMDO().findTableByName("AUTHOR").get().getIndices()
+		);
+	}
+
+	@Test
+	void happyRun_index_forTableBOOK() {
+		assertEquals(
+			Set.of(
+				new IndexMDO().setColumnNames(Set.of("SIGNATURE")).setName("IX_BOOK_SIGNATURE"),
+				new IndexMDO().setColumnNames(Set.of("TITLE")).setName("IX_BOOK_TITLE")
+			),
+			readDatabaseSchemeMDO().findTableByName("BOOK").get().getIndices()
+		);
+	}
+
+	@Test
+	void happyRun_index_forTableROOM() {
+		assertEquals(
+			Set.of(new IndexMDO().setColumnNames(Set.of("TOKEN")).setName("IX_ROOM_TOKEN")),
+			readDatabaseSchemeMDO().findTableByName("ROOM").get().getIndices()
+		);
+	}
+
+	@Test
+	void happyRun_index_forTableRACK() {
+		assertEquals(Set.of(), readDatabaseSchemeMDO().findTableByName("RACK").get().getIndices());
 	}
 
 	@Test

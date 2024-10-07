@@ -23,6 +23,7 @@ public class TableMDO {
 	private PrimaryKeyMDO primaryKey;
 	private Set<ColumnMDO> columns = new HashSet<>();
 	private Set<ForeignKeyMDO> foreignKeys = new HashSet<>();
+	private Set<IndexMDO> indices = new HashSet<>();
 	private Set<UniqueConstraintMDO> uniqueConstraints = new HashSet<>();
 
 	public Optional<ColumnMDO> findColumnByName(String columnName) {
@@ -46,7 +47,7 @@ public class TableMDO {
 		return primaryKey != null ? primaryKey.getMemberColumnNames().stream().sorted().toList() : List.of();
 	}
 
-	public boolean isPrimaryKeyConstraint(UniqueConstraintMDO uc) {
+	public boolean isPrimaryKeyConstraint(ColumnProvider uc) {
 		Set<String> pkColumnNames = getPkColumnNames().stream().collect(Collectors.toSet());
 		return (uc != null) && pkColumnNames.equals(uc.getColumnNames());
 	}

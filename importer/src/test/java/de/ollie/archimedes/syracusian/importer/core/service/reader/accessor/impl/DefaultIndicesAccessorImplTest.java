@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import de.ollie.archimedes.syracusian.importer.core.exception.ImportFailureException;
+import de.ollie.archimedes.syracusian.importer.core.model.IndexMDO;
 import de.ollie.archimedes.syracusian.importer.core.model.TableMDO;
-import de.ollie.archimedes.syracusian.importer.core.model.UniqueConstraintMDO;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -20,7 +20,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class DefaultUniqueConstraintsAccessorImplTest {
+@ExtendWith(MockitoExtension.class)
+public class DefaultIndicesAccessorImplTest {
 
 	private static final String COLUMN_NAME_0 = "column-0";
 	private static final String COLUMN_NAME_1 = "column-1";
@@ -41,51 +42,45 @@ public class DefaultUniqueConstraintsAccessorImplTest {
 	private TableMDO table;
 
 	@InjectMocks
-	private DefaultUniqueConstraintsAccessorImpl unitUnderTest;
+	private DefaultIndicesAccessorImpl unitUnderTest;
 
 	@Nested
 	class TestsOfMethod_getTables_String_String_Connection {
 
 		@Test
 		void throwsAnException_passingConnectionAsNullValue() {
-			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.getUniqueConstraints(SCHEME_NAME, table, null));
+			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.getIndices(SCHEME_NAME, table, null));
 		}
 
 		@Test
 		void throwsAnException_passingTableNameAsNullValue() {
-			assertThrows(
-				IllegalArgumentException.class,
-				() -> unitUnderTest.getUniqueConstraints(SCHEME_NAME, null, connection)
-			);
+			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.getIndices(SCHEME_NAME, null, connection));
 		}
 
 		@Test
 		void throwsAnException_passingSchemeNameAsNullValue() {
-			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.getUniqueConstraints(null, table, connection));
+			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.getIndices(null, table, connection));
 		}
 
 		@Test
 		void throwsAnException_whenSomethingWentWrongWhileRetrievingPks() throws Exception {
 			// Prepare
 			when(connection.getMetaData()).thenReturn(databaseMetaData);
-			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, true, false)).thenThrow(new SQLException());
+			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, false, false)).thenThrow(new SQLException());
 			when(table.getName()).thenReturn(TABLE_NAME);
 			// Run & Check
-			assertThrows(
-				ImportFailureException.class,
-				() -> unitUnderTest.getUniqueConstraints(SCHEME_NAME, table, connection)
-			);
+			assertThrows(ImportFailureException.class, () -> unitUnderTest.getIndices(SCHEME_NAME, table, connection));
 		}
 
 		@Test
 		void returnsAnEmptySet_ifMetaDataDoesNotContainAnyColumns() throws Exception {
 			// Prepare
 			when(connection.getMetaData()).thenReturn(databaseMetaData);
-			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, true, false)).thenReturn(resultSet);
+			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, false, false)).thenReturn(resultSet);
 			when(resultSet.next()).thenReturn(false);
 			when(table.getName()).thenReturn(TABLE_NAME);
 			// Run
-			Set<UniqueConstraintMDO> returned = unitUnderTest.getUniqueConstraints(SCHEME_NAME, table, connection);
+			Set<IndexMDO> returned = unitUnderTest.getIndices(SCHEME_NAME, table, connection);
 			// Check
 			assertEquals(Set.of(), returned);
 		}
@@ -94,15 +89,16 @@ public class DefaultUniqueConstraintsAccessorImplTest {
 		void returnsASetWithTheCorrectUniqueConstraints_passingValidConnectionSchemeNameAndTableName() throws Exception {
 			// Prepare
 			when(connection.getMetaData()).thenReturn(databaseMetaData);
-			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, true, false)).thenReturn(resultSet);
+			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, false, false)).thenReturn(resultSet);
 			when(resultSet.getString("INDEX_NAME")).thenReturn(INDEX_NAME);
 			when(resultSet.getString("COLUMN_NAME")).thenReturn(COLUMN_NAME_0);
+			when(resultSet.getBoolean("NON_UNIQUE")).thenReturn(true);
 			when(resultSet.next()).thenReturn(true, false);
 			when(table.getName()).thenReturn(TABLE_NAME);
 			// Run
-			Set<UniqueConstraintMDO> returned = unitUnderTest.getUniqueConstraints(SCHEME_NAME, table, connection);
+			Set<IndexMDO> returned = unitUnderTest.getIndices(SCHEME_NAME, table, connection);
 			// Check
-			assertEquals(Set.of(new UniqueConstraintMDO().addColumn(COLUMN_NAME_0).setName(INDEX_NAME)), returned);
+			assertEquals(Set.of(new IndexMDO().addColumn(COLUMN_NAME_0).setName(INDEX_NAME)), returned);
 		}
 
 		@Test
@@ -110,16 +106,17 @@ public class DefaultUniqueConstraintsAccessorImplTest {
 			throws Exception {
 			// Prepare
 			when(connection.getMetaData()).thenReturn(databaseMetaData);
-			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, true, false)).thenReturn(resultSet);
+			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, false, false)).thenReturn(resultSet);
 			when(resultSet.getString("INDEX_NAME")).thenReturn(INDEX_NAME);
 			when(resultSet.getString("COLUMN_NAME")).thenReturn(COLUMN_NAME_0, COLUMN_NAME_1);
+			when(resultSet.getBoolean("NON_UNIQUE")).thenReturn(true);
 			when(resultSet.next()).thenReturn(true, true, false);
 			when(table.getName()).thenReturn(TABLE_NAME);
 			// Run
-			Set<UniqueConstraintMDO> returned = unitUnderTest.getUniqueConstraints(SCHEME_NAME, table, connection);
+			Set<IndexMDO> returned = unitUnderTest.getIndices(SCHEME_NAME, table, connection);
 			// Check
 			assertEquals(
-				Set.of(new UniqueConstraintMDO().addColumn(COLUMN_NAME_0).addColumn(COLUMN_NAME_1).setName(INDEX_NAME)),
+				Set.of(new IndexMDO().addColumn(COLUMN_NAME_0).addColumn(COLUMN_NAME_1).setName(INDEX_NAME)),
 				returned
 			);
 		}
@@ -129,18 +126,19 @@ public class DefaultUniqueConstraintsAccessorImplTest {
 			throws Exception {
 			// Prepare
 			when(connection.getMetaData()).thenReturn(databaseMetaData);
-			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, true, false)).thenReturn(resultSet);
+			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, false, false)).thenReturn(resultSet);
 			when(resultSet.getString("INDEX_NAME")).thenReturn(INDEX_NAME + 0, INDEX_NAME + 1);
 			when(resultSet.getString("COLUMN_NAME")).thenReturn(COLUMN_NAME_0, COLUMN_NAME_1);
+			when(resultSet.getBoolean("NON_UNIQUE")).thenReturn(true);
 			when(resultSet.next()).thenReturn(true, true, false);
 			when(table.getName()).thenReturn(TABLE_NAME);
 			// Run
-			Set<UniqueConstraintMDO> returned = unitUnderTest.getUniqueConstraints(SCHEME_NAME, table, connection);
+			Set<IndexMDO> returned = unitUnderTest.getIndices(SCHEME_NAME, table, connection);
 			// Check
 			assertEquals(
 				Set.of(
-					new UniqueConstraintMDO().addColumn(COLUMN_NAME_0).setName(INDEX_NAME + 0),
-					new UniqueConstraintMDO().addColumn(COLUMN_NAME_1).setName(INDEX_NAME + 1)
+					new IndexMDO().addColumn(COLUMN_NAME_0).setName(INDEX_NAME + 0),
+					new IndexMDO().addColumn(COLUMN_NAME_1).setName(INDEX_NAME + 1)
 				),
 				returned
 			);
@@ -151,19 +149,16 @@ public class DefaultUniqueConstraintsAccessorImplTest {
 			throws Exception {
 			// Prepare
 			when(connection.getMetaData()).thenReturn(databaseMetaData);
-			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, true, false)).thenReturn(resultSet);
+			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, false, false)).thenReturn(resultSet);
 			when(resultSet.getString("INDEX_NAME")).thenReturn(INDEX_NAME);
 			when(resultSet.getString("COLUMN_NAME")).thenReturn(COLUMN_NAME_0);
+			when(resultSet.getBoolean("NON_UNIQUE")).thenReturn(true);
 			when(resultSet.next()).thenReturn(true, false);
 			when(table.getName()).thenReturn(TABLE_NAME);
-			when(
-				table.isPrimaryKeyConstraint(
-					new UniqueConstraintMDO().setColumnNames(Set.of(COLUMN_NAME_0)).setName(INDEX_NAME)
-				)
-			)
+			when(table.isPrimaryKeyConstraint(new IndexMDO().setColumnNames(Set.of(COLUMN_NAME_0)).setName(INDEX_NAME)))
 				.thenReturn(true);
 			// Run
-			Set<UniqueConstraintMDO> returned = unitUnderTest.getUniqueConstraints(SCHEME_NAME, table, connection);
+			Set<IndexMDO> returned = unitUnderTest.getIndices(SCHEME_NAME, table, connection);
 			// Check
 			assertEquals(Set.of(), returned);
 		}

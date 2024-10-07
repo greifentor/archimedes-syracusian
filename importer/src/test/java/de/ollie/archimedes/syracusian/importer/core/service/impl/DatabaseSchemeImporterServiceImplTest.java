@@ -15,6 +15,7 @@ import de.ollie.archimedes.syracusian.importer.core.service.DatabaseConnectionFa
 import de.ollie.archimedes.syracusian.importer.core.service.reader.ColumnReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.DatabaseSchemeReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.FkReaderService;
+import de.ollie.archimedes.syracusian.importer.core.service.reader.IndicesReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.PkReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.TableReaderService;
 import de.ollie.archimedes.syracusian.importer.core.service.reader.UniqueConstraintsReaderService;
@@ -62,6 +63,9 @@ class DatabaseSchemeImporterServiceImplTest {
 
 	@Mock
 	private ForeignKeyMDO foreignKeyB;
+
+	@Mock
+	private IndicesReaderService indicesReaderService;
 
 	@Mock
 	private PkReaderService pkReaderService;
