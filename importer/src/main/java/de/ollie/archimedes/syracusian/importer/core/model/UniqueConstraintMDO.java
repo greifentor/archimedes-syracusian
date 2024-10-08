@@ -11,11 +11,12 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Data
 @Generated
-public class UniqueConstraintMDO implements ColumnProvider {
+public class UniqueConstraintMDO implements Index<UniqueConstraintMDO> {
 
 	private String name;
 	private Set<String> columnNames = new HashSet<>();
 
+	@Override
 	public UniqueConstraintMDO addColumn(String columnName) {
 		columnNames.add(columnName);
 		return this;

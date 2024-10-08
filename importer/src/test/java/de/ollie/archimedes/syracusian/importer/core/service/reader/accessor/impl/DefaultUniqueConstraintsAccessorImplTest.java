@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -156,12 +157,7 @@ public class DefaultUniqueConstraintsAccessorImplTest {
 			when(resultSet.getString("COLUMN_NAME")).thenReturn(COLUMN_NAME_0);
 			when(resultSet.next()).thenReturn(true, false);
 			when(table.getName()).thenReturn(TABLE_NAME);
-			when(
-				table.isPrimaryKeyConstraint(
-					new UniqueConstraintMDO().setColumnNames(Set.of(COLUMN_NAME_0)).setName(INDEX_NAME)
-				)
-			)
-				.thenReturn(true);
+			when(table.getPkColumnNames()).thenReturn(List.of(COLUMN_NAME_0));
 			// Run
 			Set<UniqueConstraintMDO> returned = unitUnderTest.getUniqueConstraints(SCHEME_NAME, table, connection);
 			// Check

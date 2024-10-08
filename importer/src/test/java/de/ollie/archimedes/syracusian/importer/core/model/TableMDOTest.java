@@ -1,7 +1,6 @@
 package de.ollie.archimedes.syracusian.importer.core.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -122,54 +121,6 @@ class TableMDOTest {
 			List<String> returned = unitUnderTest.getPkColumnNames();
 			// Check
 			assertEquals(List.of(COLUMN_NAME_1), returned);
-		}
-	}
-
-	@Nested
-	class TestsOfMethod_isPrimaryKeyConstraint_UniqueConstraintMDO {
-
-		@Test
-		void returnsFalse_passingANullValueAsPrimaryKeyConstraint() {
-			assertFalse(unitUnderTest.isPrimaryKeyConstraint(null));
-		}
-
-		@Test
-		void returnsFalse_whenTableHasNoPrimaryKey() {
-			// Prepare
-			UniqueConstraintMDO uc = new UniqueConstraintMDO().setColumnNames(Set.of(COLUMN_NAME_0));
-			unitUnderTest.setPrimaryKey(null);
-			// Run & Check
-			assertFalse(unitUnderTest.isPrimaryKeyConstraint(uc));
-		}
-
-		@Test
-		void returnsFalse_passingAnUnmatchingPrimaryKeyName_0() {
-			// Prepare
-			UniqueConstraintMDO uc = new UniqueConstraintMDO().setColumnNames(Set.of(COLUMN_NAME_1));
-			PrimaryKeyMDO pk = new PrimaryKeyMDO().setMemberColumnNames(Set.of(COLUMN_NAME_0));
-			unitUnderTest.setPrimaryKey(pk);
-			// Run & Check
-			assertFalse(unitUnderTest.isPrimaryKeyConstraint(uc));
-		}
-
-		@Test
-		void returnsFalse_passingAnUnmatchingPrimaryKeyName_1() {
-			// Prepare
-			UniqueConstraintMDO uc = new UniqueConstraintMDO().setColumnNames(Set.of(COLUMN_NAME_1, COLUMN_NAME_2));
-			PrimaryKeyMDO pk = new PrimaryKeyMDO().setMemberColumnNames(Set.of(COLUMN_NAME_1));
-			unitUnderTest.setPrimaryKey(pk);
-			// Run & Check
-			assertFalse(unitUnderTest.isPrimaryKeyConstraint(uc));
-		}
-
-		@Test
-		void returnsTrue_passingAMatchingPrimaryKeyName() {
-			// Prepare
-			UniqueConstraintMDO uc = new UniqueConstraintMDO().setColumnNames(Set.of(COLUMN_NAME_0));
-			PrimaryKeyMDO pk = new PrimaryKeyMDO().setMemberColumnNames(Set.of(COLUMN_NAME_0));
-			unitUnderTest.setPrimaryKey(pk);
-			// Run & Check
-			assertTrue(unitUnderTest.isPrimaryKeyConstraint(uc));
 		}
 	}
 

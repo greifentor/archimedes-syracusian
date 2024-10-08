@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -155,8 +156,7 @@ public class DefaultIndicesAccessorImplTest {
 			when(resultSet.getBoolean("NON_UNIQUE")).thenReturn(true);
 			when(resultSet.next()).thenReturn(true, false);
 			when(table.getName()).thenReturn(TABLE_NAME);
-			when(table.isPrimaryKeyConstraint(new IndexMDO().setColumnNames(Set.of(COLUMN_NAME_0)).setName(INDEX_NAME)))
-				.thenReturn(true);
+			when(table.getPkColumnNames()).thenReturn(List.of(COLUMN_NAME_0));
 			// Run
 			Set<IndexMDO> returned = unitUnderTest.getIndices(SCHEME_NAME, table, connection);
 			// Check
