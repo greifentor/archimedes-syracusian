@@ -38,6 +38,7 @@
 	<modules>
 		<module>core-lib</module>
 		<module>importer</module>
+		<module>shell</module>
 	</modules>
 	<dependencies>
 		<dependency>
