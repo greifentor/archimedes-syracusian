@@ -98,19 +98,35 @@
 					<target>${java.version}</target>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!-- plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<executions>
 					<execution>
+						<id>exec</id>
 						<goals>
 							<goal>repackage</goal>
 						</goals>
 						<configuration>
-							<classifier>spring-boot</classifier>
+							<classifier>exec</classifier>
 							<mainClass>
 								de.ollie.archimedes.syracusian.importer.ArchimedesSyracusianImporterApplication
 							</mainClass>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin -->
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>lib</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<classifier>lib</classifier>
 						</configuration>
 					</execution>
 				</executions>
@@ -136,7 +152,8 @@
 					<ignoreEditorConfig>true</ignoreEditorConfig>
 					<!-- Use <inputGlobs> to override the default input patterns -->
 					<inputGlobs>
-						<!-- These are the default patterns, you can omit <inputGlobs> entirely 
+						<!-- These are the default patterns, you can omit
+						<inputGlobs> entirely 
 							unless you want to override them -->
 						<inputGlob>src/main/java/**/*.java</inputGlob>
 						<inputGlob>src/test/java/**/*.java</inputGlob>
