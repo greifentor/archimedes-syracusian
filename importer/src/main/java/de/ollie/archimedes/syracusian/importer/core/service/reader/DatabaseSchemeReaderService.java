@@ -4,5 +4,5 @@ import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
 import java.sql.Connection;
 
 public interface DatabaseSchemeReaderService {
-	DatabaseSchemeMDO read(Connection connection);
+	DatabaseSchemeMDO read(String schemeName, Connection connection);
 }

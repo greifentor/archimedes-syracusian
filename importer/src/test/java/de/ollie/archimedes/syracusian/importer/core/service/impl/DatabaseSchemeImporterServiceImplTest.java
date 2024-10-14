@@ -111,7 +111,8 @@ class DatabaseSchemeImporterServiceImplTest {
 		void returnsDataschemeObject_withCorrectNameSet() throws Exception {
 			// Prepare
 			when(databaseConnectionFactory.create(connectionData)).thenReturn(connection);
-			when(databaseSchemeReaderService.read(connection)).thenReturn(new DatabaseSchemeMDO(SCHEME_NAME, Set.of()));
+			when(databaseSchemeReaderService.read(SCHEME_NAME, connection))
+				.thenReturn(new DatabaseSchemeMDO(SCHEME_NAME, Set.of()));
 			// Run
 			DatabaseSchemeMDO returned = unitUnderTest.readDatabaseScheme(SCHEME_NAME, connectionData);
 			// Check
@@ -122,7 +123,8 @@ class DatabaseSchemeImporterServiceImplTest {
 		void returnsDataschemeObject_withTablesSet() throws Exception {
 			// Prepare
 			when(databaseConnectionFactory.create(connectionData)).thenReturn(connection);
-			when(databaseSchemeReaderService.read(connection)).thenReturn(new DatabaseSchemeMDO(SCHEME_NAME, Set.of()));
+			when(databaseSchemeReaderService.read(SCHEME_NAME, connection))
+				.thenReturn(new DatabaseSchemeMDO(SCHEME_NAME, Set.of()));
 			when(tableReaderService.read(SCHEME_NAME, connection)).thenReturn(Set.of(tableB, tableA));
 			// Run
 			DatabaseSchemeMDO returned = unitUnderTest.readDatabaseScheme(SCHEME_NAME, connectionData);
@@ -134,7 +136,8 @@ class DatabaseSchemeImporterServiceImplTest {
 		void returnsDataschemeObject_withColumnOfTablesSet() throws Exception {
 			// Prepare
 			when(databaseConnectionFactory.create(connectionData)).thenReturn(connection);
-			when(databaseSchemeReaderService.read(connection)).thenReturn(new DatabaseSchemeMDO(SCHEME_NAME, Set.of()));
+			when(databaseSchemeReaderService.read(SCHEME_NAME, connection))
+				.thenReturn(new DatabaseSchemeMDO(SCHEME_NAME, Set.of()));
 			when(tableReaderService.read(SCHEME_NAME, connection)).thenReturn(Set.of(tableB, tableA));
 			when(tableA.getName()).thenReturn(TABLE_NAME_A);
 			when(tableB.getName()).thenReturn(TABLE_NAME_B);
@@ -151,7 +154,8 @@ class DatabaseSchemeImporterServiceImplTest {
 		void returnsDataschemeObject_withForeignKeyOfTablesSet() throws Exception {
 			// Prepare
 			when(databaseConnectionFactory.create(connectionData)).thenReturn(connection);
-			when(databaseSchemeReaderService.read(connection)).thenReturn(new DatabaseSchemeMDO(SCHEME_NAME, Set.of()));
+			when(databaseSchemeReaderService.read(SCHEME_NAME, connection))
+				.thenReturn(new DatabaseSchemeMDO(SCHEME_NAME, Set.of()));
 			when(tableReaderService.read(SCHEME_NAME, connection)).thenReturn(Set.of(tableB, tableA));
 			when(tableA.getName()).thenReturn(TABLE_NAME_A);
 			when(tableB.getName()).thenReturn(TABLE_NAME_B);

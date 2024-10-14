@@ -67,5 +67,14 @@ class DatabaseTypeServiceImplTest {
 			// Run & Check
 			assertEquals(DatabaseType.HSQL, unitUnderTest.getDatabaseType(connection));
 		}
+
+		@Test
+		void returnsDatabaseTypeMARIA_DB_passingAConnectionWithAMatchingDriverNameForMARIA_DB() throws Exception {
+			// Prepare
+			when(connection.getMetaData()).thenReturn(metaData);
+			when(metaData.getDriverName()).thenReturn("MariaDB Connector/J");
+			// Run & Check
+			assertEquals(DatabaseType.MARIA_DB, unitUnderTest.getDatabaseType(connection));
+		}
 	}
 }

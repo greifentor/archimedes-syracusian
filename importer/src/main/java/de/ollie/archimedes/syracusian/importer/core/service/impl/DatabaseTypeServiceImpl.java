@@ -19,6 +19,8 @@ class DatabaseTypeServiceImpl implements DatabaseTypeService {
 		try {
 			if (connection.getMetaData().getDriverName().startsWith("org.hsqldb.jdbc")) {
 				return DatabaseType.HSQL;
+			} else if (connection.getMetaData().getDriverName().startsWith("MariaDB")) {
+				return DatabaseType.MARIA_DB;
 			}
 		} catch (SQLException e) {
 			throw new ImportFailureException("", ReasonType.DATABASE_TYPE_READ_ERROR, e);

@@ -39,7 +39,7 @@ class DatabaseSchemeImporterServiceImpl implements DatabaseSchemeImporterService
 		ensure(schemeName != null, "scheme name cannot be null!");
 		try {
 			Connection connection = databaseConnectionFactory.create(jdbcConnectionData);
-			DatabaseSchemeMDO scheme = databaseSchemeReaderService.read(connection);
+			DatabaseSchemeMDO scheme = databaseSchemeReaderService.read(schemeName, connection);
 			scheme.setTables(tableReaderService.read(schemeName, connection));
 			scheme
 				.getTables()

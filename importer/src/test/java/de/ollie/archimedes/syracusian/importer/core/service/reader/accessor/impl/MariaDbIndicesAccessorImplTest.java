@@ -21,7 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class DefaultIndicesAccessorImplTest {
+public class MariaDbIndicesAccessorImplTest {
 
 	private static final String COLUMN_NAME_0 = "column-0";
 	private static final String COLUMN_NAME_1 = "column-1";
@@ -42,7 +42,7 @@ public class DefaultIndicesAccessorImplTest {
 	private TableMDO table;
 
 	@InjectMocks
-	private DefaultIndicesAccessorImpl unitUnderTest;
+	private MariaDbIndicesAccessorImpl unitUnderTest;
 
 	@Nested
 	class TestsOfMethod_getTables_String_String_Connection {
@@ -66,7 +66,7 @@ public class DefaultIndicesAccessorImplTest {
 		void throwsAnException_whenSomethingWentWrongWhileRetrievingPks() throws Exception {
 			// Prepare
 			when(connection.getMetaData()).thenReturn(databaseMetaData);
-			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, false, false)).thenThrow(new SQLException());
+			when(databaseMetaData.getIndexInfo(SCHEME_NAME, "%", TABLE_NAME, false, false)).thenThrow(new SQLException());
 			when(table.getName()).thenReturn(TABLE_NAME);
 			// Run & Check
 			assertThrows(ImportFailureException.class, () -> unitUnderTest.getIndices(SCHEME_NAME, table, connection));
@@ -76,7 +76,7 @@ public class DefaultIndicesAccessorImplTest {
 		void returnsAnEmptySet_ifMetaDataDoesNotContainAnyColumns() throws Exception {
 			// Prepare
 			when(connection.getMetaData()).thenReturn(databaseMetaData);
-			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, false, false)).thenReturn(resultSet);
+			when(databaseMetaData.getIndexInfo(SCHEME_NAME, "%", TABLE_NAME, false, false)).thenReturn(resultSet);
 			when(resultSet.next()).thenReturn(false);
 			when(table.getName()).thenReturn(TABLE_NAME);
 			// Run
@@ -89,7 +89,7 @@ public class DefaultIndicesAccessorImplTest {
 		void returnsASetWithTheCorrectUniqueConstraints_passingValidConnectionSchemeNameAndTableName() throws Exception {
 			// Prepare
 			when(connection.getMetaData()).thenReturn(databaseMetaData);
-			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, false, false)).thenReturn(resultSet);
+			when(databaseMetaData.getIndexInfo(SCHEME_NAME, "%", TABLE_NAME, false, false)).thenReturn(resultSet);
 			when(resultSet.getString("INDEX_NAME")).thenReturn(INDEX_NAME);
 			when(resultSet.getString("COLUMN_NAME")).thenReturn(COLUMN_NAME_0);
 			when(resultSet.getBoolean("NON_UNIQUE")).thenReturn(true);
@@ -106,7 +106,7 @@ public class DefaultIndicesAccessorImplTest {
 			throws Exception {
 			// Prepare
 			when(connection.getMetaData()).thenReturn(databaseMetaData);
-			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, false, false)).thenReturn(resultSet);
+			when(databaseMetaData.getIndexInfo(SCHEME_NAME, "%", TABLE_NAME, false, false)).thenReturn(resultSet);
 			when(resultSet.getString("INDEX_NAME")).thenReturn(INDEX_NAME);
 			when(resultSet.getString("COLUMN_NAME")).thenReturn(COLUMN_NAME_0, COLUMN_NAME_1);
 			when(resultSet.getBoolean("NON_UNIQUE")).thenReturn(true);
@@ -126,7 +126,7 @@ public class DefaultIndicesAccessorImplTest {
 			throws Exception {
 			// Prepare
 			when(connection.getMetaData()).thenReturn(databaseMetaData);
-			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, false, false)).thenReturn(resultSet);
+			when(databaseMetaData.getIndexInfo(SCHEME_NAME, "%", TABLE_NAME, false, false)).thenReturn(resultSet);
 			when(resultSet.getString("INDEX_NAME")).thenReturn(INDEX_NAME + 0, INDEX_NAME + 1);
 			when(resultSet.getString("COLUMN_NAME")).thenReturn(COLUMN_NAME_0, COLUMN_NAME_1);
 			when(resultSet.getBoolean("NON_UNIQUE")).thenReturn(true);
@@ -149,7 +149,7 @@ public class DefaultIndicesAccessorImplTest {
 			throws Exception {
 			// Prepare
 			when(connection.getMetaData()).thenReturn(databaseMetaData);
-			when(databaseMetaData.getIndexInfo(null, SCHEME_NAME, TABLE_NAME, false, false)).thenReturn(resultSet);
+			when(databaseMetaData.getIndexInfo(SCHEME_NAME, "%", TABLE_NAME, false, false)).thenReturn(resultSet);
 			when(resultSet.getString("INDEX_NAME")).thenReturn(INDEX_NAME);
 			when(resultSet.getString("COLUMN_NAME")).thenReturn(COLUMN_NAME_0);
 			when(resultSet.getBoolean("NON_UNIQUE")).thenReturn(true);

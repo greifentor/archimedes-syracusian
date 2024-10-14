@@ -24,7 +24,7 @@ public abstract class AbstractBaseIndexAccessorImpl<T extends Index> {
 		ensure(table != null, "table cannot be null!");
 		try {
 			Map<String, T> ts = new HashMap<>();
-			ResultSet rs = connection.getMetaData().getIndexInfo(null, schemeName, table.getName(), unique, false);
+			ResultSet rs = getIndexResultSet(schemeName, table, unique, connection);
 			while (rs.next()) {
 				String name = rs.getString("INDEX_NAME");
 				if (isToIgnore(rs, table, name)) {
@@ -65,5 +65,10 @@ public abstract class AbstractBaseIndexAccessorImpl<T extends Index> {
 	private boolean isPrimaryKeyConstraint(TableMDO t, ColumnProvider<?> cp) {
 		Set<String> pkColumnNames = t.getPkColumnNames().stream().collect(Collectors.toSet());
 		return (cp != null) && pkColumnNames.equals(cp.getColumnNames());
+	}
+
+	protected ResultSet getIndexResultSet(String schemeName, TableMDO table, boolean unique, Connection connection)
+		throws SQLException {
+		return connection.getMetaData().getIndexInfo(null, schemeName, table.getName(), unique, false);
 	}
 }

@@ -24,12 +24,12 @@ class DatabaseSchemeReaderServiceImpl
 	}
 
 	@Override
-	public DatabaseSchemeMDO read(Connection connection) {
+	public DatabaseSchemeMDO read(String schemeName, Connection connection) {
 		ensure(connection != null, "connection cannot be null!");
 		DatabaseSchemeAccessor accessor = accessors.getOrDefault(
 			databaseTypeService.getDatabaseType(connection),
 			defaultAccessor
 		);
-		return new DatabaseSchemeMDO(accessor.getName(connection), Set.of());
+		return new DatabaseSchemeMDO(accessor.getName(schemeName, connection), Set.of());
 	}
 }

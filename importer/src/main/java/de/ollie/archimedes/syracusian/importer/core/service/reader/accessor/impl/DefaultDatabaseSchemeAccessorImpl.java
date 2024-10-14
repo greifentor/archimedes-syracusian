@@ -20,8 +20,8 @@ public class DefaultDatabaseSchemeAccessorImpl implements DatabaseSchemeAccessor
 	}
 
 	@Override
-	public String getName(Connection connection) {
-		ensure(connection != null, "conncetion can not be null!");
+	public String getName(String schemeName, Connection connection) {
+		ensure(connection != null, "connection can not be null!");
 		try {
 			return connection.getSchema();
 		} catch (SQLException e) {

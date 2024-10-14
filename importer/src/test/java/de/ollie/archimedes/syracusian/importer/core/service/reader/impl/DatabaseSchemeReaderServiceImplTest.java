@@ -64,19 +64,19 @@ class DatabaseSchemeReaderServiceImplTest {
 
 		@Test
 		void throwsAnException_passingANullValueAsConnection() {
-			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.read(null));
+			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.read(SCHEME_NAME, null));
 		}
 
 		@Test
 		void throwsAnException_whenAnAccessorIsDefinedForDatabaseTypeUNSPECIFIEDOnly() {
 			// Prepare
 			when(accessor0.getDatabaseType()).thenReturn(DatabaseType.UNSPECIFIED);
-			when(accessor0.getName(connection)).thenReturn(SCHEME_NAME);
+			when(accessor0.getName(";op", connection)).thenReturn(SCHEME_NAME);
 			when(accessors.stream()).thenReturn(Stream.of(accessor0));
 			when(databaseTypeService.getDatabaseType(connection)).thenReturn(DatabaseType.HSQL);
 			unitUnderTest.postConstruct();
 			// Run
-			DatabaseSchemeMDO returned = unitUnderTest.read(connection);
+			DatabaseSchemeMDO returned = unitUnderTest.read(";op", connection);
 			// Check
 			assertEquals(SCHEME_NAME, returned.getName());
 		}
@@ -86,12 +86,12 @@ class DatabaseSchemeReaderServiceImplTest {
 			// Prepare
 			when(accessor0.getDatabaseType()).thenReturn(DatabaseType.UNSPECIFIED);
 			when(accessor1.getDatabaseType()).thenReturn(DatabaseType.HSQL);
-			when(accessor1.getName(connection)).thenReturn(SCHEME_NAME);
+			when(accessor1.getName(";op", connection)).thenReturn(SCHEME_NAME);
 			when(accessors.stream()).thenReturn(Stream.of(accessor0, accessor1));
 			when(databaseTypeService.getDatabaseType(connection)).thenReturn(DatabaseType.HSQL);
 			unitUnderTest.postConstruct();
 			// Run
-			DatabaseSchemeMDO returned = unitUnderTest.read(connection);
+			DatabaseSchemeMDO returned = unitUnderTest.read(";op", connection);
 			// Check
 			assertEquals(SCHEME_NAME, returned.getName());
 		}

@@ -40,21 +40,24 @@ class DefaultDatabaseSchemeAccessorImplTest {
 	class TestsOfMethod_getName_Connection {
 
 		@Test
-		void throwsAnException_passingANullValueAsConnection() {
-			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.getName(null));
+		void throwsAnException_passingConnectionAsNull() {
+			assertThrows(IllegalArgumentException.class, () -> unitUnderTest.getName(SCHEME_NAME, null));
 		}
 
 		@Test
 		void throwsAnException_whenConnectionAccessFails() throws Exception {
 			when(connection.getSchema()).thenThrow(new SQLException());
-			ImportFailureException e = assertThrows(ImportFailureException.class, () -> unitUnderTest.getName(connection));
+			ImportFailureException e = assertThrows(
+				ImportFailureException.class,
+				() -> unitUnderTest.getName(SCHEME_NAME, connection)
+			);
 			assertEquals(ReasonType.SCHEME_NAME_READ_ERROR, e.getReasonType());
 		}
 
 		@Test
 		void returnsTheCorrectSchemeNameForTheConnection() throws Exception {
 			when(connection.getSchema()).thenReturn(SCHEME_NAME);
-			assertEquals(SCHEME_NAME, unitUnderTest.getName(connection));
+			assertEquals(SCHEME_NAME, unitUnderTest.getName(SCHEME_NAME, connection));
 		}
 	}
 }
