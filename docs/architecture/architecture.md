@@ -26,7 +26,7 @@ This document contains architecture descriptions and documentation.
 
 ## Architecture Constraints
 
-* None.
+* Clean Architecture.
 
 
 ## Context & Scope
@@ -57,6 +57,10 @@ TBD
 ## Crosscutting Concepts
 
 TBD
+
+## Domain Diagram
+
+![domain model](./domain-model.png)
 
 
 ## Architecture Decisions

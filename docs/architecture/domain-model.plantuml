@@ -1,0 +1,56 @@
+@startuml
+
+'!theme mono
+'COMMENT - skinparam linetype ortho
+
+class Datascheme {
+	id : UUID
+}
+
+class Table {
+	id : UUID
+	name : String
+}
+
+class Column {
+	id : UUID
+	name : String
+}
+
+class PrimaryKey {
+	id : UUID
+	name : String
+}
+
+class ForeignKey {
+	id : UUID
+	name : String
+}
+
+class Index {
+	id : UUID
+	name : String
+}
+
+class UniqueConstraint {
+	id : UUID
+	name : String
+}
+
+Datascheme --> "0..*"  Table : tables
+
+Table --> "0..*"  Column : columns
+Table --> "0..1"  PrimaryKey : primaryKey
+Table --> "0..*"  ForeignKey : foreignKeys
+Table --> "0..*"  Index : indices
+Table --> "0..*"  UniqueConstraint : uniqueConstraints
+
+PrimaryKey --> "1..*" Column : columns
+
+ForeignKey --> "1..*" Column : columns
+
+Index --> "1..*" Column : columns
+
+UniqueConstraint --> "1..*" Column : columns
+
+@enduml
