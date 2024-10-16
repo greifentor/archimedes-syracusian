@@ -1,0 +1,22 @@
+@startuml
+
+'!theme mono
+'COMMENT - skinparam linetype ortho
+
+component archimedes_syracusian as "archimdes-syracusian" {
+
+	component core_lib as "core-lib"
+	component exporter
+	component importer
+	component shell
+
+	importer --> core_lib
+
+	exporter --> core_lib
+
+	shell --> importer
+	shell --> exporter
+
+}
+
+@enduml

@@ -41,7 +41,11 @@ TBD
 
 ## Building Block View
 
-TBD
+### Component Diagram Level 1
+
+![component diagram (level 1)](./component-diagram-level-1.png)
+
+Arrows pointing in direction of access.
 
 
 ## Runtime View
@@ -58,7 +62,7 @@ TBD
 
 TBD
 
-## Domain Diagram
+### Domain Diagram
 
 ![domain model](./domain-model.png)
 
