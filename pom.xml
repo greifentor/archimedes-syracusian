@@ -37,6 +37,7 @@
 	</build>
 	<modules>
 		<module>core-lib</module>
+		<module>exporter</module>
 		<module>importer</module>
 		<module>shell</module>
 	</modules>
