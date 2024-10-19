@@ -13,4 +13,5 @@ import lombok.experimental.Accessors;
 public class Datascheme {
 
 	private UUID id;
+	private String name;
 }
