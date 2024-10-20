@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import de.ollie.archimedes.syracusian.importer.core.factory.UUIDFactory;
-import de.ollie.archimedes.syracusian.importer.core.model.DatabaseSchemeMDO;
-import de.ollie.archimedes.syracusian.model.Datascheme;
+import de.ollie.archimedes.syracusian.importer.core.model.TableMDO;
+import de.ollie.archimedes.syracusian.model.Table;
 import java.util.UUID;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,22 +16,22 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class DataschemeMDOMapperImplTest {
+class TableMDOMapperImplTest {
 
 	private static final String NAME = "name";
 	private static final UUID UID = UUID.randomUUID();
 
 	@Mock
-	private DatabaseSchemeMDO mdo;
+	private TableMDO mdo;
 
 	@Mock
 	private UUIDFactory uuidFactory;
 
 	@InjectMocks
-	private DataschemeMDOMapperImpl unitUnderTest;
+	private TableMDOMapperImpl unitUnderTest;
 
 	@Nested
-	class TestsOfMethod_toModel_DataschemeMDO {
+	class TestsOfTheMethod_toModel_TableMDO {
 
 		@Test
 		void throwsAnException_passingANullValue() {
@@ -39,21 +39,21 @@ class DataschemeMDOMapperImplTest {
 		}
 
 		@Test
-		void setsIdCorrectly_passingADataschemeMDO() {
+		void returnsTableWithTheCorrectId_passingAnMDO() {
 			// Prepare
 			when(uuidFactory.create()).thenReturn(UID);
 			// Run
-			Datascheme returned = unitUnderTest.toModel(mdo);
+			Table returned = unitUnderTest.toModel(mdo);
 			// Check
 			assertEquals(UID, returned.getId());
 		}
 
 		@Test
-		void setsNameCorrectly_passingADataschemeMDOWithANameSet() {
+		void returnsTableWithTheCorrectName_passingAnMDOWithName() {
 			// Prepare
 			when(mdo.getName()).thenReturn(NAME);
 			// Run
-			Datascheme returned = unitUnderTest.toModel(mdo);
+			Table returned = unitUnderTest.toModel(mdo);
 			// Check
 			assertEquals(NAME, returned.getName());
 		}

@@ -18,6 +18,6 @@ public class DataschemeMDOMapperImpl implements DataschemeMDOMapper {
 	@Override
 	public Datascheme toModel(DatabaseSchemeMDO mdo) {
 		ensure(mdo != null, "mdo cannot be null!");
-		return new Datascheme(uuidFactory.create(), mdo.getName());
+		return new Datascheme().setId(uuidFactory.create()).setName(mdo.getName());
 	}
 }
