@@ -26,7 +26,12 @@ approach to get a more modern and more modular version of the application.
 
 * Import database schemes from existing databases.
 * Create new and modify existing database schemes.
-* Create update scripts to update an existing database scheme with the database scheme as represented in the application.
+* Create update scripts to update an existing database scheme with the database scheme as represented in the application (e. g. SQL and Liquibase).
+* Different ways to view the database scheme (e. g.):
+    * PlantUml (view only)
+    * Swing (view and manipulate)
+* Views can be limited for specific tables.
+* Search options to find tables, fields and other data from the datascheme.
 * Allow to link specific code generators to the application, which are able to create code based on the database scheme as shown in the application.
 
 ## Frame Conditions
@@ -38,3 +43,25 @@ approach to get a more modern and more modular version of the application.
 ## Architecture
 
 For details look here: [architecture documentation](docs/architecture/architecture.md)
+
+## Milestones Planning
+
+### Milestone 1
+
+* Command Shell
+    * Import dataschemes from database via JDBC.
+    * Dataschemes write to and read from file system.
+    * Get differences between datascheme and databases.
+    * Search for table, field and other information in the datascheme.
+* Swing GUI
+    * Show dataschemes via PlantUML.
+    * Allow limitation of shown tables e. g.:
+        * Select tables which should be shown.
+        * Add related tables to the view.
+
+### Milestone 2
+
+* Swing GUI
+    * Organize tables by position.
+    * Organize relations.
+    * Add and edit tables.
