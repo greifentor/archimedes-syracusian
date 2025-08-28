@@ -48,18 +48,24 @@ For details look here: [architecture documentation](docs/architecture/architectu
 
 ### Milestone 1
 
-* Command Shell
-    * Import dataschemes from database via JDBC.
-    * Dataschemes write to and read from file system.
-    * Get differences between datascheme and databases.
+* Service
+    * Import dataschemes form databases via JDBC.
     * Search for table, field and other information in the datascheme.
 * Swing GUI
     * Show dataschemes via PlantUML.
+
+### Milestone 2
+
+* Command Shell
+    * Dataschemes write to and read from file system.
+    * Get differences between datascheme and databases.
+* Swing GUI
     * Allow limitation of shown tables e. g.:
         * Select tables which should be shown.
         * Add related tables to the view.
+        * Show / Hide columns.
 
-### Milestone 2
+### Milestone 3
 
 * Swing GUI
     * Organize tables by position.
